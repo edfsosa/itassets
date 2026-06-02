@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer require *)",
+      "Bash(php artisan *)",
+      "Bash(mysql -u root -e \"SELECT 1;\")",
+      "Bash(mysql -u root -proot -e \"CREATE DATABASE IF NOT EXISTS itassets CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\")"
+    ]
+  }
+}
