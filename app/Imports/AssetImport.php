@@ -52,9 +52,9 @@ class AssetImport implements ToModel, WithHeadingRow, WithUpserts
 
         // Asignación a empleado si se especificó
         $employeeName = $row['empleado_asignado'] ?? $row['employee'] ?? null;
-        if ($employeeName && $asset->wasRecentlyCreated) {
+        if ($employeeName) {
             $employeeId = $this->resolveEmployee($employeeName);
-            if ($employeeId) {
+            if ($employeeId && ! $asset->assignments()->active()->exists()) {
                 $asset->assignments()->create([
                     'employee_id' => $employeeId,
                     'assigned_by' => 'Importación',
@@ -193,7 +193,7 @@ class AssetImport implements ToModel, WithHeadingRow, WithUpserts
             if ($parsed) return $parsed->format('Y-m-d');
         }
 
-        return $value;
+        return null;
     }
 
     protected function parseMoney($value): ?float

@@ -59,7 +59,7 @@ class ViewAsset extends ViewRecord
                         'notes'       => $data['notes'] ?? null,
                     ]);
 
-                    $this->refreshFormData(['status']);
+                    $this->record->refresh();
 
                     Notification::make()
                         ->title('Activo asignado correctamente')
@@ -101,7 +101,7 @@ class ViewAsset extends ViewRecord
                         ]);
                     }
 
-                    $this->refreshFormData(['status']);
+                    $this->record->refresh();
 
                     Notification::make()
                         ->title('Devolución registrada correctamente')
@@ -152,7 +152,7 @@ class ViewAsset extends ViewRecord
                         'started_at'  => $data['started_at'],
                     ]);
 
-                    $this->refreshFormData(['status']);
+                    $this->record->refresh();
 
                     Notification::make()
                         ->title('Activo enviado a mantenimiento')
@@ -205,7 +205,7 @@ class ViewAsset extends ViewRecord
                     // Actualizar el estado del activo según la elección del analista
                     $this->record->update(['status' => $data['new_asset_status']]);
 
-                    $this->refreshFormData(['status']);
+                    $this->record->refresh();
 
                     Notification::make()
                         ->title('Mantenimiento cerrado correctamente')

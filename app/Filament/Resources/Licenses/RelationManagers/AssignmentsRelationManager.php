@@ -113,7 +113,11 @@ class AssignmentsRelationManager extends RelationManager
                 CreateAction::make()
                     ->label('Asignar licencia')
                     ->mutateFormDataUsing(function (array $data): array {
-                        // Al menos uno debe estar presente
+                        if (blank($data['asset_id'] ?? null) && blank($data['employee_id'] ?? null)) {
+                            throw new \Illuminate\Validation\ValidationException::withMessages([
+                                'asset_id' => 'Debe seleccionar al menos un Activo o un Empleado.',
+                            ]);
+                        }
                         return $data;
                     }),
             ])

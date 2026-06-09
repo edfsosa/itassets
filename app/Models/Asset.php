@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Asset extends Model
 {
@@ -68,12 +69,15 @@ class Asset extends Model
     {
         static::creating(function (Asset $asset) {
             if (empty($asset->asset_tag)) {
-                $lastNumber = static::query()
-                    ->where('asset_tag', 'like', 'IT-%')
-                    ->selectRaw("MAX(CAST(SUBSTRING(asset_tag, 4) AS UNSIGNED)) as max_num")
-                    ->value('max_num') ?? 0;
+                DB::transaction(function () use ($asset) {
+                    $lastNumber = static::query()
+                        ->where('asset_tag', 'like', 'IT-%')
+                        ->lockForUpdate()
+                        ->selectRaw("MAX(CAST(SUBSTRING(asset_tag, 4) AS UNSIGNED)) as max_num")
+                        ->value('max_num') ?? 0;
 
-                $asset->asset_tag = 'IT-' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+                    $asset->asset_tag = 'IT-' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+                });
             }
         });
     }

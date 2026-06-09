@@ -35,7 +35,7 @@ class LicenseAssignment extends Model
 
             if ($license && ! $license->hasAvailableSeats()) {
                 throw ValidationException::withMessages([
-                    'license_id' => "La licencia \"{$license->product_name}\" no tiene seats disponibles ({$license->total_seats}/{$license->total_seats} en uso).",
+                    'license_id' => "La licencia \"{$license->product_name}\" no tiene seats disponibles ({$license->usedSeats()}/{$license->total_seats} en uso).",
                 ]);
             }
         });

@@ -56,7 +56,9 @@ class MaintenanceRecord extends Model
     protected static function booted(): void
     {
         static::created(function (MaintenanceRecord $record) {
-            $record->asset->update(['status' => 'maintenance']);
+            if ($record->status !== 'completed') {
+                $record->asset->update(['status' => 'maintenance']);
+            }
         });
     }
 
