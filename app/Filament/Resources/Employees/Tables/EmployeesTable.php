@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Filament\Resources\Employees\Tables;
+
+use App\Models\Employee;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+
+class EmployeesTable
+{
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('employee_code')
+                    ->label('Código')
+                    ->searchable()
+                    ->sortable()
+                    ->placeholder('—'),
+
+                TextColumn::make('name')
+                    ->label('Nombre')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('department')
+                    ->label('Departamento')
+                    ->searchable()
+                    ->sortable()
+                    ->placeholder('—'),
+
+                TextColumn::make('position')
+                    ->label('Cargo')
+                    ->searchable()
+                    ->placeholder('—'),
+
+                TextColumn::make('email')
+                    ->label('Correo')
+                    ->searchable()
+                    ->placeholder('—')
+                    ->copyable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('phone')
+                    ->label('Teléfono')
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('status')
+                    ->label('Estado')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => Employee::STATUSES[$state] ?? $state)
+                    ->color(fn (string $state): string => match ($state) {
+                        'active'   => 'success',
+                        'inactive' => 'danger',
+                        default    => 'gray',
+                    })
+                    ->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->label('Estado')
+                    ->options(Employee::STATUSES),
+            ])
+            ->recordActions([
+                EditAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ])
+            ->defaultSort('name');
+    }
+}
