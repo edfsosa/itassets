@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Employees\RelationManagers;
 
+use App\Models\Assignment;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -27,18 +29,12 @@ class AssignmentsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                TextColumn::make('asset.asset_tag')
-                    ->label('Código')
-                    ->weight('bold')
-                    ->sortable(),
-
-                TextColumn::make('asset.name')
-                    ->label('Activo')
+                TextColumn::make('asset_list')
+                    ->label('Activos')
+                    ->getStateUsing(fn (Assignment $record): string => $record->assets
+                        ->map(fn ($a) => '[' . $a->asset_tag . '] ' . $a->name)
+                        ->implode("\n"))
                     ->searchable(),
-
-                TextColumn::make('asset.category.name')
-                    ->label('Categoría')
-                    ->badge(),
 
                 TextColumn::make('assigned_at')
                     ->label('Asignado el')
@@ -63,6 +59,13 @@ class AssignmentsRelationManager extends RelationManager
                     ->query(fn (Builder $q) => $q->whereNull('returned_at'))
                     ->toggle()
                     ->default(),
+            ])
+            ->recordActions([
+                Action::make('pdf')
+                    ->label('PDF')
+                    ->icon('heroicon-o-printer')
+                    ->color('gray')
+                    ->url(fn (Assignment $record) => route('assignments.pdf', $record), shouldOpenInNewTab: true),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

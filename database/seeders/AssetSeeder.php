@@ -12,6 +12,7 @@ class AssetSeeder extends Seeder
         $assets = [
             // --- Hardware ---
             [
+                'asset_tag'       => 'IT-0001',
                 'name'            => 'Laptop Dell Latitude 5540',
                 'asset_category_id' => 1,
                 'brand'           => 'Dell',
@@ -28,6 +29,7 @@ class AssetSeeder extends Seeder
                 'notes'           => 'Laptop estándar para personal de TI.',
             ],
             [
+                'asset_tag'       => 'IT-0002',
                 'name'            => 'Laptop Dell Latitude 5540',
                 'asset_category_id' => 1,
                 'brand'           => 'Dell',
@@ -44,6 +46,7 @@ class AssetSeeder extends Seeder
                 'notes'           => 'Laptop para RH.',
             ],
             [
+                'asset_tag'       => 'IT-0003',
                 'name'            => 'Laptop Lenovo ThinkPad X1',
                 'asset_category_id' => 1,
                 'brand'           => 'Lenovo',
@@ -60,6 +63,7 @@ class AssetSeeder extends Seeder
                 'notes'           => 'Premium para directorio.',
             ],
             [
+                'asset_tag'       => 'IT-0004',
                 'name'            => 'Desktop HP EliteDesk 800',
                 'asset_category_id' => 1,
                 'brand'           => 'HP',
@@ -76,6 +80,7 @@ class AssetSeeder extends Seeder
                 'notes'           => 'Equipo de escritorio estándar, sin asignar.',
             ],
             [
+                'asset_tag'       => 'IT-0005',
                 'name'            => 'Desktop HP EliteDesk 800',
                 'asset_category_id' => 1,
                 'brand'           => 'HP',
@@ -92,6 +97,7 @@ class AssetSeeder extends Seeder
                 'notes'           => 'En reparación por falla en la fuente de poder.',
             ],
             [
+                'asset_tag'       => 'IT-0006',
                 'name'            => 'MacBook Pro 14"',
                 'asset_category_id' => 1,
                 'brand'           => 'Apple',
@@ -109,6 +115,7 @@ class AssetSeeder extends Seeder
             ],
             // --- Periféricos ---
             [
+                'asset_tag'       => 'IT-0007',
                 'name'            => 'Monitor Dell 27" 4K',
                 'asset_category_id' => 3,
                 'brand'           => 'Dell',
@@ -125,6 +132,7 @@ class AssetSeeder extends Seeder
                 'notes'           => 'Monitor nuevo en stock.',
             ],
             [
+                'asset_tag'       => 'IT-0008',
                 'name'            => 'Keyboard Logitech MX Keys',
                 'asset_category_id' => 3,
                 'brand'           => 'Logitech',
@@ -139,6 +147,7 @@ class AssetSeeder extends Seeder
                 'notes'           => 'Teclado inalámbrico premium.',
             ],
             [
+                'asset_tag'       => 'IT-0009',
                 'name'            => 'Headset Jabra Evolve2 40',
                 'asset_category_id' => 3,
                 'brand'           => 'Jabra',
@@ -154,6 +163,7 @@ class AssetSeeder extends Seeder
             ],
             // --- Infraestructura ---
             [
+                'asset_tag'       => 'IT-0010',
                 'name'            => 'Switch Cisco Catalyst 9300',
                 'asset_category_id' => 4,
                 'brand'           => 'Cisco',
@@ -170,6 +180,7 @@ class AssetSeeder extends Seeder
                 'notes'           => 'Switch core del Data Center.',
             ],
             [
+                'asset_tag'       => 'IT-0011',
                 'name'            => 'APC Smart-UPS 1500',
                 'asset_category_id' => 4,
                 'brand'           => 'APC',
@@ -187,6 +198,7 @@ class AssetSeeder extends Seeder
             ],
             // --- Móviles ---
             [
+                'asset_tag'       => 'IT-0012',
                 'name'            => 'Smartphone Samsung Galaxy S24',
                 'asset_category_id' => 5,
                 'brand'           => 'Samsung',
@@ -203,6 +215,7 @@ class AssetSeeder extends Seeder
                 'notes'           => 'Smartphone corporativo para gerencia.',
             ],
             [
+                'asset_tag'       => 'IT-0013',
                 'name'            => 'Tablet Samsung Galaxy Tab S9',
                 'asset_category_id' => 5,
                 'brand'           => 'Samsung',

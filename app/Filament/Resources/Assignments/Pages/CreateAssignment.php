@@ -8,4 +8,34 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateAssignment extends CreateRecord
 {
     protected static string $resource = AssignmentResource::class;
+
+    protected array $assetsToAttach = [];
+
+    public function mount(): void
+    {
+        parent::mount();
+
+        $employeeId = request()->query('employee_id');
+        if ($employeeId) {
+            $this->data['employee_id'] = (int) $employeeId;
+        }
+    }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $this->assetsToAttach = $data['assets'] ?? [];
+        unset($data['assets']);
+        return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+        foreach ($this->assetsToAttach as $item) {
+            $this->record->assets()->attach($item['asset_id'], [
+                'charger_serial' => $item['charger_serial'] ?? null,
+                'ticket_number'  => $item['ticket_number'] ?? null,
+                'assigned_at'    => $this->record->assigned_at,
+            ]);
+        }
+    }
 }

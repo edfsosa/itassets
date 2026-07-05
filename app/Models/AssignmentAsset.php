@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+
+class AssignmentAsset extends Pivot
+{
+    use HasFactory;
+
+    protected $table = 'assignment_asset';
+
+    protected $fillable = [
+        'assignment_id',
+        'asset_id',
+        'charger_serial',
+        'ticket_number',
+        'assigned_at',
+        'notes',
+    ];
+
+    protected $casts = [
+        'assigned_at' => 'date',
+    ];
+
+    protected static function booted(): void
+    {
+        static::created(function (AssignmentAsset $pivot) {
+            $pivot->asset->update(['status' => 'assigned']);
+        });
+    }
+
+    public function assignment(): BelongsTo
+    {
+        return $this->belongsTo(Assignment::class);
+    }
+
+    public function asset(): BelongsTo
+    {
+        return $this->belongsTo(Asset::class);
+    }
+}

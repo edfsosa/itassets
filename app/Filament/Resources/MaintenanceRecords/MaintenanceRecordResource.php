@@ -5,7 +5,9 @@ namespace App\Filament\Resources\MaintenanceRecords;
 use App\Filament\Resources\MaintenanceRecords\Pages\CreateMaintenanceRecord;
 use App\Filament\Resources\MaintenanceRecords\Pages\EditMaintenanceRecord;
 use App\Filament\Resources\MaintenanceRecords\Pages\ListMaintenanceRecords;
+use App\Filament\Resources\MaintenanceRecords\Pages\ViewMaintenanceRecord;
 use App\Filament\Resources\MaintenanceRecords\Schemas\MaintenanceRecordForm;
+use App\Filament\Resources\MaintenanceRecords\Schemas\MaintenanceRecordInfolist;
 use App\Filament\Resources\MaintenanceRecords\Tables\MaintenanceRecordsTable;
 use App\Models\MaintenanceRecord;
 use BackedEnum;
@@ -37,6 +39,11 @@ class MaintenanceRecordResource extends Resource
         return MaintenanceRecordForm::configure($schema);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return MaintenanceRecordInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return MaintenanceRecordsTable::configure($table);
@@ -52,6 +59,7 @@ class MaintenanceRecordResource extends Resource
         return [
             'index'  => ListMaintenanceRecords::route('/'),
             'create' => CreateMaintenanceRecord::route('/create'),
+            'view'   => ViewMaintenanceRecord::route('/{record}'),
             'edit'   => EditMaintenanceRecord::route('/{record}/edit'),
         ];
     }

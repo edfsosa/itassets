@@ -9,6 +9,7 @@ class DemoSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            SettingSeeder::class,
             AssetCategorySeeder::class,
             SupplierSeeder::class,
             LocationSeeder::class,

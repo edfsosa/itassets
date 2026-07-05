@@ -5,7 +5,9 @@ namespace App\Filament\Resources\AssetCategories;
 use App\Filament\Resources\AssetCategories\Pages\CreateAssetCategory;
 use App\Filament\Resources\AssetCategories\Pages\EditAssetCategory;
 use App\Filament\Resources\AssetCategories\Pages\ListAssetCategories;
+use App\Filament\Resources\AssetCategories\Pages\ViewAssetCategory;
 use App\Filament\Resources\AssetCategories\Schemas\AssetCategoryForm;
+use App\Filament\Resources\AssetCategories\Schemas\AssetCategoryInfolist;
 use App\Filament\Resources\AssetCategories\Tables\AssetCategoriesTable;
 use App\Models\AssetCategory;
 use BackedEnum;
@@ -37,6 +39,11 @@ class AssetCategoryResource extends Resource
         return AssetCategoryForm::configure($schema);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return AssetCategoryInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return AssetCategoriesTable::configure($table);
@@ -52,6 +59,7 @@ class AssetCategoryResource extends Resource
         return [
             'index'  => ListAssetCategories::route('/'),
             'create' => CreateAssetCategory::route('/create'),
+            'view'   => ViewAssetCategory::route('/{record}'),
             'edit'   => EditAssetCategory::route('/{record}/edit'),
         ];
     }

@@ -2,18 +2,23 @@
 
 namespace Database\Seeders;
 
+use App\Models\Asset;
 use App\Models\Assignment;
+use App\Models\Employee;
 use Illuminate\Database\Seeder;
 
 class AssignmentSeeder extends Seeder
 {
     public function run(): void
     {
+        $employee = fn (string $legajo) => Employee::where('legajo', $legajo)->first()->id;
+        $asset    = fn (string $tag)    => Asset::where('asset_tag', $tag)->first()->id;
+
         $assignments = [
             // Martín González (Director TI) -> Laptop Dell Latitude 1
             [
-                'asset_id'    => 1,
-                'employee_id' => 1,
+                'asset_tag'   => 'IT-0001',
+                'legajo'      => 'AMP-001',
                 'assigned_by' => 'Admin',
                 'assigned_at' => '2026-01-20',
                 'returned_at' => null,
@@ -21,8 +26,8 @@ class AssignmentSeeder extends Seeder
             ],
             // Sofía Martínez (Admin Sistemas) -> Laptop Dell Latitude 2
             [
-                'asset_id'    => 2,
-                'employee_id' => 2,
+                'asset_tag'   => 'IT-0002',
+                'legajo'      => 'AMP-002',
                 'assigned_by' => 'Admin',
                 'assigned_at' => '2026-01-20',
                 'returned_at' => null,
@@ -30,8 +35,8 @@ class AssignmentSeeder extends Seeder
             ],
             // Valentina Álvarez (Dir RRHH) -> Lenovo ThinkPad
             [
-                'asset_id'    => 3,
-                'employee_id' => 4,
+                'asset_tag'   => 'IT-0003',
+                'legajo'      => 'AMP-004',
                 'assigned_by' => 'Admin',
                 'assigned_at' => '2026-02-05',
                 'returned_at' => null,
@@ -39,8 +44,8 @@ class AssignmentSeeder extends Seeder
             ],
             // Luciana Fernández (Marketing) -> MacBook Pro
             [
-                'asset_id'    => 6,
-                'employee_id' => 10,
+                'asset_tag'   => 'IT-0006',
+                'legajo'      => 'AMP-010',
                 'assigned_by' => 'Admin',
                 'assigned_at' => '2026-03-05',
                 'returned_at' => null,
@@ -48,8 +53,8 @@ class AssignmentSeeder extends Seeder
             ],
             // Andrés Silva (Ventas) -> Smartphone Galaxy S24
             [
-                'asset_id'    => 13,
-                'employee_id' => 7,
+                'asset_tag'   => 'IT-0012',
+                'legajo'      => 'AMP-007',
                 'assigned_by' => 'Admin',
                 'assigned_at' => '2026-03-20',
                 'returned_at' => null,
@@ -57,8 +62,8 @@ class AssignmentSeeder extends Seeder
             ],
             // Diego Rodríguez (Soporte) -> Headset Jabra
             [
-                'asset_id'    => 10,
-                'employee_id' => 3,
+                'asset_tag'   => 'IT-0009',
+                'legajo'      => 'AMP-003',
                 'assigned_by' => 'Admin',
                 'assigned_at' => '2026-04-15',
                 'returned_at' => null,
@@ -66,8 +71,8 @@ class AssignmentSeeder extends Seeder
             ],
             // Devolución ejemplo: Desktop HP que estaba asignado y se devolvió
             [
-                'asset_id'    => 5,
-                'employee_id' => 3,
+                'asset_tag'   => 'IT-0005',
+                'legajo'      => 'AMP-003',
                 'assigned_by' => 'Admin',
                 'assigned_at' => '2025-09-01',
                 'returned_at' => '2026-02-28',
@@ -75,8 +80,15 @@ class AssignmentSeeder extends Seeder
             ],
         ];
 
-        foreach ($assignments as $assignment) {
-            Assignment::create($assignment);
+        foreach ($assignments as $data) {
+            $assetId  = $asset($data['asset_tag']);
+            $data['employee_id'] = $employee($data['legajo']);
+            unset($data['asset_tag'], $data['legajo']);
+
+            $assignment = Assignment::create($data);
+            $assignment->assets()->attach($assetId, [
+                'assigned_at' => $assignment->assigned_at,
+            ]);
         }
     }
 }

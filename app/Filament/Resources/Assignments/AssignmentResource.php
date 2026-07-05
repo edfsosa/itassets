@@ -5,7 +5,9 @@ namespace App\Filament\Resources\Assignments;
 use App\Filament\Resources\Assignments\Pages\CreateAssignment;
 use App\Filament\Resources\Assignments\Pages\EditAssignment;
 use App\Filament\Resources\Assignments\Pages\ListAssignments;
+use App\Filament\Resources\Assignments\Pages\ViewAssignment;
 use App\Filament\Resources\Assignments\Schemas\AssignmentForm;
+use App\Filament\Resources\Assignments\Schemas\AssignmentInfolist;
 use App\Filament\Resources\Assignments\Tables\AssignmentsTable;
 use App\Models\Assignment;
 use BackedEnum;
@@ -37,6 +39,11 @@ class AssignmentResource extends Resource
         return AssignmentForm::configure($schema);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return AssignmentInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return AssignmentsTable::configure($table);
@@ -52,6 +59,7 @@ class AssignmentResource extends Resource
         return [
             'index'  => ListAssignments::route('/'),
             'create' => CreateAssignment::route('/create'),
+            'view'   => ViewAssignment::route('/{record}'),
             'edit'   => EditAssignment::route('/{record}/edit'),
         ];
     }

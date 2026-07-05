@@ -19,10 +19,15 @@ class EmployeeForm
                     ->maxLength(255)
                     ->columnSpan(2),
 
-                TextInput::make('employee_code')
-                    ->label('Código de empleado')
+                TextInput::make('legajo')
+                    ->label('Legajo')
                     ->maxLength(50)
                     ->unique(ignoreRecord: true)
+                    ->columnSpan(1),
+
+                TextInput::make('document_number')
+                    ->label('C.I. / Documento')
+                    ->maxLength(50)
                     ->columnSpan(1),
 
                 Select::make('status')

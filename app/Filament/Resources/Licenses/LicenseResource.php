@@ -5,8 +5,10 @@ namespace App\Filament\Resources\Licenses;
 use App\Filament\Resources\Licenses\Pages\CreateLicense;
 use App\Filament\Resources\Licenses\Pages\EditLicense;
 use App\Filament\Resources\Licenses\Pages\ListLicenses;
+use App\Filament\Resources\Licenses\Pages\ViewLicense;
 use App\Filament\Resources\Licenses\RelationManagers\AssignmentsRelationManager;
 use App\Filament\Resources\Licenses\Schemas\LicenseForm;
+use App\Filament\Resources\Licenses\Schemas\LicenseInfolist;
 use App\Filament\Resources\Licenses\Tables\LicensesTable;
 use App\Models\License;
 use BackedEnum;
@@ -38,6 +40,11 @@ class LicenseResource extends Resource
         return LicenseForm::configure($schema);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return LicenseInfolist::configure($schema);
+    }
+
     public static function table(Table $table): Table
     {
         return LicensesTable::configure($table);
@@ -55,6 +62,7 @@ class LicenseResource extends Resource
         return [
             'index'  => ListLicenses::route('/'),
             'create' => CreateLicense::route('/create'),
+            'view'   => ViewLicense::route('/{record}'),
             'edit'   => EditLicense::route('/{record}/edit'),
         ];
     }

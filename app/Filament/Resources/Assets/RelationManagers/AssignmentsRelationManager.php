@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Assets\RelationManagers;
 
+use App\Models\Assignment;
 use App\Models\Employee;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteBulkAction;
@@ -10,6 +12,8 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -41,6 +45,16 @@ class AssignmentsRelationManager extends RelationManager
                     ->required()
                     ->default(now())
                     ->displayFormat('d/m/Y')
+                    ->columnSpan(1),
+
+                TextInput::make('charger_serial')
+                    ->label('Cargador SN')
+                    ->maxLength(100)
+                    ->columnSpan(1),
+
+                TextInput::make('ticket_number')
+                    ->label('N.º Ticket')
+                    ->maxLength(100)
                     ->columnSpan(1),
 
                 DatePicker::make('returned_at')
@@ -100,9 +114,22 @@ class AssignmentsRelationManager extends RelationManager
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['assigned_by'] = auth()->user()?->name;
                         return $data;
+                    })
+                    ->after(function (Assignment $record, array $data): void {
+                        $record->assets()->attach($this->getOwnerRecord()->id, [
+                            'charger_serial' => $data['charger_serial'] ?? null,
+                            'ticket_number'  => $data['ticket_number'] ?? null,
+                            'assigned_at'    => $data['assigned_at'],
+                            'notes'          => $data['notes'] ?? null,
+                        ]);
                     }),
             ])
             ->recordActions([
+                Action::make('pdf')
+                    ->label('PDF')
+                    ->icon('heroicon-o-printer')
+                    ->color('gray')
+                    ->url(fn (Assignment $record) => route('assignments.pdf', $record), shouldOpenInNewTab: true),
                 EditAction::make(),
             ])
             ->toolbarActions([

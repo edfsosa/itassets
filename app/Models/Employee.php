@@ -11,12 +11,13 @@ class Employee extends Model
     use HasFactory;
 
     protected $fillable = [
-        'employee_code',
+        'legajo',
         'name',
         'email',
         'phone',
         'department',
         'position',
+        'document_number',
         'status',
     ];
 

@@ -5,8 +5,10 @@ namespace App\Filament\Resources\Assignments\Schemas;
 use App\Models\Asset;
 use App\Models\Employee;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class AssignmentForm
@@ -15,17 +17,6 @@ class AssignmentForm
     {
         return $schema
             ->components([
-                Select::make('asset_id')
-                    ->label('Activo')
-                    ->required()
-                    ->options(
-                        Asset::whereIn('status', ['available', 'stock'])
-                            ->get()
-                            ->mapWithKeys(fn ($a) => [$a->id => "[{$a->asset_tag}] {$a->name}"])
-                    )
-                    ->searchable()
-                    ->columnSpan(1),
-
                 Select::make('employee_id')
                     ->label('Empleado')
                     ->required()
@@ -55,6 +46,35 @@ class AssignmentForm
                     ->rows(3)
                     ->maxLength(1000)
                     ->columnSpanFull(),
+
+                Repeater::make('assets')
+                    ->label('Activos asignados')
+                    ->schema([
+                        Select::make('asset_id')
+                            ->label('Activo')
+                            ->required()
+                            ->options(fn (): array => Asset::whereIn('status', ['available', 'stock'])
+                                ->get()
+                                ->mapWithKeys(fn ($a) => [$a->id => "[{$a->asset_tag}] {$a->name} ({$a->model})"])
+                                ->toArray())
+                            ->searchable()
+                            ->columnSpan(3),
+
+                        TextInput::make('charger_serial')
+                            ->label('Cargador SN')
+                            ->maxLength(100)
+                            ->columnSpan(2),
+
+                        TextInput::make('ticket_number')
+                            ->label('N.º Ticket')
+                            ->maxLength(100)
+                            ->columnSpan(2),
+                    ])
+                    ->columns(7)
+                    ->addActionLabel('Agregar activo')
+                    ->defaultItems(1)
+                    ->minItems(1)
+                    ->reorderable(false),
             ])
             ->columns(2);
     }

@@ -23,6 +23,14 @@ class ViewAsset extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            // ── Imprimir asignación activa ────────────────────────────────────
+            Action::make('printAssignment')
+                ->label('Imprimir asignación')
+                ->icon('heroicon-o-printer')
+                ->color('gray')
+                ->visible(fn () => $this->record->status === 'assigned' && $this->record->activeAssignment())
+                ->url(fn () => route('assignments.pdf', $this->record->activeAssignment()), shouldOpenInNewTab: true),
+
             // ── Asignar activo ────────────────────────────────────────────────
             Action::make('assign')
                 ->label('Asignar activo')
@@ -46,17 +54,31 @@ class ViewAsset extends ViewRecord
                         ->default(now())
                         ->displayFormat('d/m/Y'),
 
+                    TextInput::make('charger_serial')
+                        ->label('Cargador SN')
+                        ->maxLength(100),
+
+                    TextInput::make('ticket_number')
+                        ->label('N.º Ticket')
+                        ->maxLength(100),
+
                     Textarea::make('notes')
                         ->label('Notas')
                         ->rows(2),
                 ])
                 ->action(function (array $data): void {
-                    Assignment::create([
-                        'asset_id'    => $this->record->id,
+                    $assignment = Assignment::create([
                         'employee_id' => $data['employee_id'],
                         'assigned_by' => auth()->user()?->name,
                         'assigned_at' => $data['assigned_at'],
                         'notes'       => $data['notes'] ?? null,
+                    ]);
+
+                    $assignment->assets()->attach($this->record->id, [
+                        'charger_serial' => $data['charger_serial'] ?? null,
+                        'ticket_number'  => $data['ticket_number'] ?? null,
+                        'assigned_at'    => $data['assigned_at'],
+                        'notes'          => $data['notes'] ?? null,
                     ]);
 
                     $this->record->refresh();

@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
 
 class Asset extends Model
 {
@@ -62,29 +62,20 @@ class Asset extends Model
         'poor' => 'Deteriorado',
     ];
 
-    // -------------------------------------------------------------------------
-    // Auto-generación del asset_tag
-    // -------------------------------------------------------------------------
     protected static function booted(): void
     {
         static::creating(function (Asset $asset) {
             if (empty($asset->asset_tag)) {
-                DB::transaction(function () use ($asset) {
-                    $lastNumber = static::query()
-                        ->where('asset_tag', 'like', 'IT-%')
-                        ->lockForUpdate()
-                        ->selectRaw("MAX(CAST(SUBSTRING(asset_tag, 4) AS UNSIGNED)) as max_num")
-                        ->value('max_num') ?? 0;
+                $lastNumber = static::query()
+                    ->where('asset_tag', 'like', 'IT-%')
+                    ->selectRaw("MAX(CAST(SUBSTRING(asset_tag, 4) AS UNSIGNED)) as max_num")
+                    ->value('max_num') ?? 0;
 
-                    $asset->asset_tag = 'IT-' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-                });
+                $asset->asset_tag = 'IT-' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
             }
         });
     }
 
-    // -------------------------------------------------------------------------
-    // Relaciones
-    // -------------------------------------------------------------------------
     public function category(): BelongsTo
     {
         return $this->belongsTo(AssetCategory::class, 'asset_category_id');
@@ -105,14 +96,20 @@ class Asset extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function assignments(): HasMany
+    public function assignments(): BelongsToMany
     {
-        return $this->hasMany(Assignment::class);
+        return $this->belongsToMany(Assignment::class, 'assignment_asset')
+            ->using(AssignmentAsset::class)
+            ->withPivot(['charger_serial', 'ticket_number', 'assigned_at', 'notes'])
+            ->withTimestamps();
     }
 
-    public function activeAssignment()
+    public function activeAssignment(): ?Assignment
     {
-        return $this->hasOne(Assignment::class)->whereNull('returned_at')->latest();
+        return Assignment::whereHas('assets', fn ($q) => $q->where('asset_id', $this->id))
+            ->whereNull('returned_at')
+            ->latest('assigned_at')
+            ->first();
     }
 
     public function maintenanceRecords(): HasMany
