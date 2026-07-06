@@ -11,8 +11,8 @@ class AssignmentSeeder extends Seeder
 {
     public function run(): void
     {
-        $employee = fn (string $legajo) => Employee::where('legajo', $legajo)->first()->id;
-        $asset    = fn (string $tag)    => Asset::where('asset_tag', $tag)->first()->id;
+        $employee = fn (string $legajo) => Employee::where('legajo', $legajo)->first()?->id;
+        $asset    = fn (string $tag)    => Asset::where('asset_tag', $tag)->first()?->id;
 
         $assignments = [
             // Martín González (Director TI) -> Laptop Dell Latitude 1

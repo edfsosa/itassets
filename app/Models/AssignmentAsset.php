@@ -28,7 +28,15 @@ class AssignmentAsset extends Pivot
     protected static function booted(): void
     {
         static::created(function (AssignmentAsset $pivot) {
-            $pivot->asset->update(['status' => 'assigned']);
+            if ($pivot->asset) {
+                $pivot->asset->update(['status' => 'assigned']);
+            }
+        });
+
+        static::deleted(function (AssignmentAsset $pivot) {
+            if ($pivot->asset) {
+                $pivot->asset->update(['status' => 'available']);
+            }
         });
     }
 

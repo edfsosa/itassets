@@ -39,7 +39,6 @@ class RecentAssetsWidget extends TableWidget
 
                 TextColumn::make('created_at')
                     ->label('Registrado')
-                    ->date('d/m/Y')
                     ->since(),
             ])
             ->recordUrl(fn (Asset $record): string => AssetResource::getUrl('view', ['record' => $record]))

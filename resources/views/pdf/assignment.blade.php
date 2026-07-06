@@ -38,11 +38,11 @@
     @if ($intro)
         <p>{{ str_replace(
             [':company', ':date', ':employee', ':ci', ':position'],
-            [$company, $assignment->assigned_at->format('d/m/Y'), $assignment->employee->name, $assignment->employee->document_number ?? '—', $assignment->employee->position],
+            [$company, $assignment->assigned_at->format('d/m/Y'), optional($assignment->employee)->name ?? '—', optional($assignment->employee)->document_number ?? '—', optional($assignment->employee)->position ?? '—'],
             $intro
         ) }}</p>
     @else
-        <p>Documento de asignación de equipamiento a <strong>{{ $assignment->employee->name }}</strong>.</p>
+        <p>Documento de asignación de equipamiento a <strong>{{ optional($assignment->employee)->name ?? '—' }}</strong>.</p>
     @endif
 
     @if (count($clauses))
@@ -85,7 +85,7 @@
     </table>
 
     <div style="margin-top: 4px; font-size: 11px;">
-        <strong>Legajo:</strong> {{ $assignment->employee->legajo ?? '—' }}
+        <strong>Legajo:</strong> {{ optional($assignment->employee)->legajo ?? '—' }}
     </div>
 
     @if ($assignment->notes)
@@ -102,9 +102,9 @@
     <table class="signature" width="100%">
         <tr>
             <td align="center">
-                <div><strong>{{ $assignment->employee->name }}</strong></div>
+                <div><strong>{{ optional($assignment->employee)->name ?? '—' }}</strong></div>
                 <div style="margin-top: 4px; font-size: 11px;">
-                    C.I.: {{ $assignment->employee->document_number ?? '—' }}
+                    C.I.: {{ optional($assignment->employee)->document_number ?? '—' }}
                 </div>
                 <div style="margin-top: 30px;">
                     <div class="signature-line">Firma</div>

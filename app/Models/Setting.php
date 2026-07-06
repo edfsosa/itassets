@@ -18,9 +18,14 @@ class Setting extends Model
 
         $value = $setting->value;
 
-        $decoded = json_decode($value, true);
+        if (is_string($value) && (str_starts_with($value, '{') || str_starts_with($value, '['))) {
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $decoded;
+            }
+        }
 
-        return json_last_error() === JSON_ERROR_NONE ? $decoded : $value;
+        return $value;
     }
 
     public static function set(string $key, mixed $value): void

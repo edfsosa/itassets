@@ -15,29 +15,35 @@ class AssetsByStatusChartWidget extends ChartWidget
 
     protected function getData(): array
     {
-        $data = [];
+        $colorMap = [
+            'stock'       => '#9ca3af',
+            'available'   => '#10b981',
+            'assigned'    => '#3b82f6',
+            'maintenance' => '#f59e0b',
+            'retired'     => '#6b7280',
+            'lost'        => '#ef4444',
+        ];
+
+        $counts = Asset::selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        $data   = [];
+        $colors = [];
         $labels = [];
 
         foreach (Asset::STATUSES as $key => $label) {
-            $count = Asset::where('status', $key)->count();
-            if ($count > 0) {
-                $data[]   = $count;
-                $labels[] = $label;
-            }
+            $count = (int) ($counts[$key] ?? 0);
+            $data[]   = $count;
+            $labels[] = $label;
+            $colors[] = $colorMap[$key] ?? '#9ca3af';
         }
 
         return [
             'datasets' => [
                 [
                     'data' => $data,
-                    'backgroundColor' => [
-                        '#10b981', // success - available
-                        '#3b82f6', // primary - assigned
-                        '#f59e0b', // warning - maintenance
-                        '#6b7280', // gray - retired
-                        '#9ca3af', // gray - stock
-                        '#ef4444', // danger - lost
-                    ],
+                    'backgroundColor' => $colors,
                     'borderColor' => '#ffffff',
                     'borderWidth' => 2,
                 ],

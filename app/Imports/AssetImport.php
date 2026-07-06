@@ -33,22 +33,26 @@ class AssetImport implements ToModel, WithHeadingRow, WithUpserts
         $locationId = $this->resolveLocation($row['ubicacion'] ?? null);
 
         $status = $this->normalizeStatus($row['estado'] ?? null);
+        $assetTag = $row['asset_tag'] ?? $row['codigo'] ?? null;
 
-        $asset = Asset::updateOrCreate(
-            ['asset_tag' => $row['asset_tag'] ?? $row['codigo'] ?? null],
-            [
-                'name'              => $row['name'] ?? $row['nombre'] ?? '—',
-                'asset_category_id' => $categoryId,
-                'brand'             => $row['marca'] ?? null,
-                'model'             => $row['modelo'] ?? null,
-                'serial_number'     => $row['numero_de_serie'] ?? $row['serial_number'] ?? null,
-                'status'            => $status,
-                'purchase_date'     => $this->parseDate($row['fecha_de_compra'] ?? $row['purchase_date'] ?? null),
-                'purchase_price'    => $this->parseMoney($row['costo'] ?? $row['purchase_price'] ?? null),
-                'supplier_id'       => $supplierId,
-                'location_id'       => $locationId,
-            ]
-        );
+        $data = [
+            'name'              => $row['name'] ?? $row['nombre'] ?? '—',
+            'asset_category_id' => $categoryId,
+            'brand'             => $row['marca'] ?? null,
+            'model'             => $row['modelo'] ?? null,
+            'serial_number'     => $row['numero_de_serie'] ?? $row['serial_number'] ?? null,
+            'status'            => $status,
+            'purchase_date'     => $this->parseDate($row['fecha_de_compra'] ?? $row['purchase_date'] ?? null),
+            'purchase_price'    => $this->parseMoney($row['costo'] ?? $row['purchase_price'] ?? null),
+            'supplier_id'       => $supplierId,
+            'location_id'       => $locationId,
+        ];
+
+        if ($assetTag) {
+            $asset = Asset::updateOrCreate(['asset_tag' => $assetTag], $data);
+        } else {
+            $asset = Asset::create($data);
+        }
 
         // Asignación a empleado si se especificó
         $employeeName = $row['empleado_asignado'] ?? $row['employee'] ?? null;

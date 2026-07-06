@@ -3,10 +3,9 @@
 namespace App\Filament\Resources\Assets\Pages;
 
 use App\Filament\Resources\Assets\AssetResource;
-use App\Models\Assignment;
-use App\Models\Employee;
 use App\Models\MaintenanceRecord;
-use App\Models\Supplier;
+use App\Services\AssignmentService;
+use App\Services\MaintenanceService;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
@@ -22,8 +21,10 @@ class ViewAsset extends ViewRecord
 
     protected function getHeaderActions(): array
     {
+        $assignmentService = app(AssignmentService::class);
+        $maintenanceService = app(MaintenanceService::class);
+
         return [
-            // ── Imprimir asignación activa ────────────────────────────────────
             Action::make('printAssignment')
                 ->label('Imprimir asignación')
                 ->icon('heroicon-o-printer')
@@ -31,7 +32,6 @@ class ViewAsset extends ViewRecord
                 ->visible(fn () => $this->record->status === 'assigned' && $this->record->activeAssignment())
                 ->url(fn () => route('assignments.pdf', $this->record->activeAssignment()), shouldOpenInNewTab: true),
 
-            // ── Asignar activo ────────────────────────────────────────────────
             Action::make('assign')
                 ->label('Asignar activo')
                 ->icon('heroicon-o-user-plus')
@@ -41,11 +41,7 @@ class ViewAsset extends ViewRecord
                     Select::make('employee_id')
                         ->label('Empleado')
                         ->required()
-                        ->options(
-                            Employee::where('status', 'active')
-                                ->orderBy('name')
-                                ->pluck('name', 'id')
-                        )
+                        ->options(fn () => $assignmentService->getActiveEmployees())
                         ->searchable(),
 
                     DatePicker::make('assigned_at')
@@ -66,22 +62,8 @@ class ViewAsset extends ViewRecord
                         ->label('Notas')
                         ->rows(2),
                 ])
-                ->action(function (array $data): void {
-                    $assignment = Assignment::create([
-                        'employee_id' => $data['employee_id'],
-                        'assigned_by' => auth()->user()?->name,
-                        'assigned_at' => $data['assigned_at'],
-                        'notes'       => $data['notes'] ?? null,
-                    ]);
-
-                    $assignment->assets()->attach($this->record->id, [
-                        'charger_serial' => $data['charger_serial'] ?? null,
-                        'ticket_number'  => $data['ticket_number'] ?? null,
-                        'assigned_at'    => $data['assigned_at'],
-                        'notes'          => $data['notes'] ?? null,
-                    ]);
-
-                    $this->record->refresh();
+                ->action(function (array $data) use ($assignmentService): void {
+                    $assignmentService->assign($this->record, $data);
 
                     Notification::make()
                         ->title('Activo asignado correctamente')
@@ -89,7 +71,6 @@ class ViewAsset extends ViewRecord
                         ->send();
                 }),
 
-            // ── Registrar devolución ──────────────────────────────────────────
             Action::make('return')
                 ->label('Registrar devolución')
                 ->icon('heroicon-o-arrow-uturn-left')
@@ -106,24 +87,8 @@ class ViewAsset extends ViewRecord
                         ->label('Notas de devolución')
                         ->rows(2),
                 ])
-                ->action(function (array $data): void {
-                    $active = $this->record->activeAssignment;
-
-                    if ($active) {
-                        $notes = $active->notes;
-                        if (! empty($data['notes'])) {
-                            $notes = $notes
-                                ? $notes . "\n[Devolución] " . $data['notes']
-                                : '[Devolución] ' . $data['notes'];
-                        }
-
-                        $active->update([
-                            'returned_at' => $data['returned_at'],
-                            'notes'       => $notes,
-                        ]);
-                    }
-
-                    $this->record->refresh();
+                ->action(function (array $data) use ($assignmentService): void {
+                    $assignmentService->return($this->record, $data);
 
                     Notification::make()
                         ->title('Devolución registrada correctamente')
@@ -131,7 +96,6 @@ class ViewAsset extends ViewRecord
                         ->send();
                 }),
 
-            // ── Enviar a mantenimiento ────────────────────────────────────────
             Action::make('sendToMaintenance')
                 ->label('Enviar a mantenimiento')
                 ->icon('heroicon-o-wrench-screwdriver')
@@ -154,7 +118,7 @@ class ViewAsset extends ViewRecord
 
                     Select::make('supplier_id')
                         ->label('Proveedor de servicio')
-                        ->options(Supplier::pluck('name', 'id'))
+                        ->options(fn () => $maintenanceService->getSuppliers())
                         ->searchable(),
 
                     DatePicker::make('started_at')
@@ -163,18 +127,8 @@ class ViewAsset extends ViewRecord
                         ->default(now())
                         ->displayFormat('d/m/Y'),
                 ])
-                ->action(function (array $data): void {
-                    MaintenanceRecord::create([
-                        'asset_id'    => $this->record->id,
-                        'type'        => $data['type'],
-                        'status'      => 'in_progress',
-                        'description' => $data['description'],
-                        'technician'  => $data['technician'] ?? null,
-                        'supplier_id' => $data['supplier_id'] ?? null,
-                        'started_at'  => $data['started_at'],
-                    ]);
-
-                    $this->record->refresh();
+                ->action(function (array $data) use ($maintenanceService): void {
+                    $maintenanceService->start($this->record, $data);
 
                     Notification::make()
                         ->title('Activo enviado a mantenimiento')
@@ -182,7 +136,6 @@ class ViewAsset extends ViewRecord
                         ->send();
                 }),
 
-            // ── Cerrar mantenimiento ──────────────────────────────────────────
             Action::make('closeMaintenance')
                 ->label('Cerrar mantenimiento')
                 ->icon('heroicon-o-check-circle')
@@ -209,25 +162,8 @@ class ViewAsset extends ViewRecord
                         ->label('Resolución / Diagnóstico final')
                         ->rows(3),
                 ])
-                ->action(function (array $data): void {
-                    // Cerrar el registro de mantenimiento activo más reciente
-                    $active = $this->record->maintenanceRecords()
-                        ->where('status', '!=', 'completed')
-                        ->latest('started_at')
-                        ->first();
-
-                    if ($active) {
-                        $active->update([
-                            'status'       => 'completed',
-                            'completed_at' => $data['completed_at'],
-                            'resolution'   => $data['resolution'] ?? null,
-                        ]);
-                    }
-
-                    // Actualizar el estado del activo según la elección del analista
-                    $this->record->update(['status' => $data['new_asset_status']]);
-
-                    $this->record->refresh();
+                ->action(function (array $data) use ($maintenanceService): void {
+                    $maintenanceService->close($this->record, $data);
 
                     Notification::make()
                         ->title('Mantenimiento cerrado correctamente')

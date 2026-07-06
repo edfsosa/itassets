@@ -11,8 +11,8 @@ class MaintenanceRecordSeeder extends Seeder
 {
     public function run(): void
     {
-        $asset    = fn (string $tag)  => Asset::where('asset_tag', $tag)->first()->id;
-        $supplier = fn (string $name) => Supplier::where('name', $name)->first()->id;
+        $asset    = fn (string $tag)  => Asset::where('asset_tag', $tag)->first()?->id;
+        $supplier = fn (string $name) => Supplier::where('name', $name)->first()?->id;
 
         $records = [
             [

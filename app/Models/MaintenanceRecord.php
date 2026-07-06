@@ -50,14 +50,43 @@ class MaintenanceRecord extends Model
         'completed'   => 'success',
     ];
 
+    public const TYPE_COLORS = [
+        'repair'     => 'danger',
+        'preventive' => 'success',
+        'warranty'   => 'warning',
+        'upgrade'    => 'info',
+        'other'      => 'gray',
+    ];
+
+    public function getStatusLabel(): string
+    {
+        return self::STATUSES[$this->status] ?? $this->status;
+    }
+
+    public function getStatusBadgeColor(): string
+    {
+        return self::STATUS_COLORS[$this->status] ?? 'gray';
+    }
+
+    public function getTypeLabel(): string
+    {
+        return self::TYPES[$this->type] ?? $this->type;
+    }
+
     // -------------------------------------------------------------------------
     // Al crear un registro de mantenimiento → activo pasa a "En mantenimiento"
     // -------------------------------------------------------------------------
     protected static function booted(): void
     {
         static::created(function (MaintenanceRecord $record) {
-            if ($record->status !== 'completed') {
+            if ($record->status !== 'completed' && $record->asset) {
                 $record->asset->update(['status' => 'maintenance']);
+            }
+        });
+
+        static::updated(function (MaintenanceRecord $record) {
+            if ($record->wasChanged('status') && $record->status === 'completed' && $record->asset) {
+                $record->asset->update(['status' => 'available']);
             }
         });
     }
