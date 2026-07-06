@@ -16,32 +16,12 @@ class AssetsByCategoryChartWidget extends ChartWidget
 
     protected ?string $heading = 'Activos por categoría';
 
-    protected function getDateRange(): ?array
-    {
-        $from = session('dashboard_date_from');
-        $to = session('dashboard_date_to');
-
-        if ($from && $to) {
-            return [$from, $to];
-        }
-
-        return null;
-    }
-
     protected function getData(): array
     {
         $labels = [];
         $data   = [];
 
-        $range = $this->getDateRange();
-
-        $categories = AssetCategory::withCount(['assets' => function ($q) use ($range) {
-            if ($range) {
-                $q->whereBetween('created_at', [$range[0], $range[1] . ' 23:59:59']);
-            }
-        }])->get();
-
-        foreach ($categories as $category) {
+        foreach (AssetCategory::withCount('assets')->get() as $category) {
             $labels[] = $category->name;
             $data[]   = $category->assets_count;
         }

@@ -22,33 +22,16 @@ class RecentNotificationsWidget extends TableWidget
         return 'Notificaciones recientes';
     }
 
-    protected function getDateRange(): ?array
-    {
-        $from = session('dashboard_date_from');
-        $to = session('dashboard_date_to');
-
-        if ($from && $to) {
-            return [$from, $to];
-        }
-
-        return null;
-    }
-
     public function table(Table $table): Table
     {
-        $query = DatabaseNotification::query()
-            ->where('notifiable_type', auth()->user()?->getMorphClass() ?? '')
-            ->where('notifiable_id', auth()->id() ?? 0)
-            ->latest()
-            ->limit(10);
-
-        $range = $this->getDateRange();
-        if ($range) {
-            $query->whereBetween('created_at', [$range[0], $range[1] . ' 23:59:59']);
-        }
-
         return $table
-            ->query($query)
+            ->query(
+                DatabaseNotification::query()
+                    ->where('notifiable_type', auth()->user()?->getMorphClass() ?? '')
+                    ->where('notifiable_id', auth()->id() ?? 0)
+                    ->latest()
+                    ->limit(10)
+            )
             ->columns([
                 TextColumn::make('created_at')
                     ->label('')

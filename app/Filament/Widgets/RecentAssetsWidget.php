@@ -22,29 +22,10 @@ class RecentAssetsWidget extends TableWidget
         return 'Últimos activos registrados';
     }
 
-    protected function getDateRange(): ?array
-    {
-        $from = session('dashboard_date_from');
-        $to = session('dashboard_date_to');
-
-        if ($from && $to) {
-            return [$from, $to];
-        }
-
-        return null;
-    }
-
     public function table(Table $table): Table
     {
-        $query = Asset::latest()->limit(5);
-
-        $range = $this->getDateRange();
-        if ($range) {
-            $query->whereBetween('created_at', [$range[0], $range[1] . ' 23:59:59']);
-        }
-
         return $table
-            ->query($query)
+            ->query(Asset::latest()->limit(5))
             ->columns([
                 TextColumn::make('asset_tag')
                     ->label('Código')
