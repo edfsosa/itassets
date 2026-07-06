@@ -20,13 +20,9 @@ class AssetStatsWidget extends StatsOverviewWidget
             ->groupBy('status')
             ->pluck('count', 'status');
 
-        $total       = array_sum($counts->toArray());
-        $available   = (int) ($counts['available'] ?? 0);
-        $stock       = (int) ($counts['stock'] ?? 0);
-        $assigned    = (int) ($counts['assigned'] ?? 0);
-        $maintenance = (int) ($counts['maintenance'] ?? 0);
-        $retired     = (int) ($counts['retired'] ?? 0);
-        $lost        = (int) ($counts['lost'] ?? 0);
+        $total     = array_sum($counts->toArray());
+        $available = (int) ($counts['available'] ?? 0) + (int) ($counts['stock'] ?? 0);
+        $assigned  = (int) ($counts['assigned'] ?? 0);
 
         return [
             Stat::make('Total de activos', $total)
@@ -34,23 +30,12 @@ class AssetStatsWidget extends StatsOverviewWidget
                 ->color('gray'),
 
             Stat::make('Disponibles', $available)
-                ->description("{$stock} en stock / almacén")
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->icon('heroicon-o-check-circle')
                 ->color('success'),
 
             Stat::make('Asignados', $assigned)
                 ->icon('heroicon-o-user')
                 ->color('primary'),
-
-            Stat::make('En mantenimiento', $maintenance)
-                ->icon('heroicon-o-wrench-screwdriver')
-                ->color('warning'),
-
-            Stat::make('Dados de baja', $retired)
-                ->description("{$lost} perdidos / robados")
-                ->icon('heroicon-o-archive-box-x-mark')
-                ->color('danger'),
         ];
     }
 }
