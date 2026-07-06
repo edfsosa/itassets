@@ -9,7 +9,10 @@ class AssetsByStatusChartWidget extends ChartWidget
 {
     protected static ?int $sort = 3;
 
-    protected int | string | array $columnSpan = 6;
+    protected int | string | array $columnSpan = [
+        'default' => 12,
+        'md' => 6,
+    ];
 
     protected ?string $pollingInterval = '60s';
 
