@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MaintenanceRecords;
 
+use App\Filament\Concerns\HasResourcePermissions;
 use App\Filament\Resources\MaintenanceRecords\Pages\CreateMaintenanceRecord;
 use App\Filament\Resources\MaintenanceRecords\Pages\EditMaintenanceRecord;
 use App\Filament\Resources\MaintenanceRecords\Pages\ListMaintenanceRecords;
@@ -18,6 +19,12 @@ use Filament\Tables\Table;
 
 class MaintenanceRecordResource extends Resource
 {
+    use HasResourcePermissions;
+
+    protected static function getPermissionName(): string
+    {
+        return 'maintenance_record';
+    }
     protected static ?string $model = MaintenanceRecord::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedWrenchScrewdriver;

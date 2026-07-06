@@ -55,7 +55,7 @@ class AssignmentsTable
             ->filters([
                 Filter::make('active')
                     ->label('Solo activos (sin devolver)')
-                    ->query(fn (Builder $query) => $query->whereNull('returned_at'))
+                    ->query(fn (Builder $query) => $query->active())
                     ->toggle(),
             ])
             ->recordActions([

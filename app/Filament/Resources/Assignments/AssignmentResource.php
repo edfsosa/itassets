@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Assignments;
 
+use App\Filament\Concerns\HasResourcePermissions;
 use App\Filament\Resources\Assignments\Pages\CreateAssignment;
 use App\Filament\Resources\Assignments\Pages\EditAssignment;
 use App\Filament\Resources\Assignments\Pages\ListAssignments;
@@ -18,6 +19,12 @@ use Filament\Tables\Table;
 
 class AssignmentResource extends Resource
 {
+    use HasResourcePermissions;
+
+    protected static function getPermissionName(): string
+    {
+        return 'assignment';
+    }
     protected static ?string $model = Assignment::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowsRightLeft;

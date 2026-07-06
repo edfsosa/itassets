@@ -14,13 +14,17 @@ class AssetStatsWidget extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $total       = Asset::count();
-        $available   = Asset::where('status', 'available')->count();
-        $stock       = Asset::where('status', 'stock')->count();
-        $assigned    = Asset::where('status', 'assigned')->count();
-        $maintenance = Asset::where('status', 'maintenance')->count();
-        $retired     = Asset::where('status', 'retired')->count();
-        $lost        = Asset::where('status', 'lost')->count();
+        $counts = Asset::selectRaw("status, COUNT(*) as count")
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        $total       = array_sum($counts->toArray());
+        $available   = (int) ($counts['available'] ?? 0);
+        $stock       = (int) ($counts['stock'] ?? 0);
+        $assigned    = (int) ($counts['assigned'] ?? 0);
+        $maintenance = (int) ($counts['maintenance'] ?? 0);
+        $retired     = (int) ($counts['retired'] ?? 0);
+        $lost        = (int) ($counts['lost'] ?? 0);
 
         return [
             Stat::make('Total de activos', $total)

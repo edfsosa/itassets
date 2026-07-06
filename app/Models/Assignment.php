@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,14 +36,14 @@ class Assignment extends Model
         });
     }
 
-    public function scopeActive($query)
+    public function scopeActive(Builder $query): void
     {
-        return $query->whereNull('returned_at');
+        $query->whereNull('returned_at');
     }
 
-    public function scopeReturned($query)
+    public function scopeReturned(Builder $query): void
     {
-        return $query->whereNotNull('returned_at');
+        $query->whereNotNull('returned_at');
     }
 
     public function isActive(): bool

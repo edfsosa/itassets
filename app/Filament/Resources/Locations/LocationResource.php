@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Locations;
 
+use App\Filament\Concerns\HasResourcePermissions;
 use App\Filament\Resources\Locations\Pages\CreateLocation;
 use App\Filament\Resources\Locations\Pages\EditLocation;
 use App\Filament\Resources\Locations\Pages\ListLocations;
@@ -18,6 +19,12 @@ use Filament\Tables\Table;
 
 class LocationResource extends Resource
 {
+    use HasResourcePermissions;
+
+    protected static function getPermissionName(): string
+    {
+        return 'location';
+    }
     protected static ?string $model = Location::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;

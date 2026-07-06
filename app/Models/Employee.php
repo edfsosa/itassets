@@ -26,6 +26,21 @@ class Employee extends Model
         'inactive' => 'Inactivo',
     ];
 
+    public const STATUS_COLORS = [
+        'active'   => 'success',
+        'inactive' => 'danger',
+    ];
+
+    public function getStatusLabel(): string
+    {
+        return self::STATUSES[$this->status] ?? $this->status;
+    }
+
+    public function getStatusBadgeColor(): string
+    {
+        return self::STATUS_COLORS[$this->status] ?? 'gray';
+    }
+
     public function assignments(): HasMany
     {
         return $this->hasMany(Assignment::class);

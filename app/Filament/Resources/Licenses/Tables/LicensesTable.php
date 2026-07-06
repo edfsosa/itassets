@@ -16,6 +16,7 @@ class LicensesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->query(License::query()->withCount('activeAssignments'))
             ->columns([
                 TextColumn::make('product_name')
                     ->label('Producto')

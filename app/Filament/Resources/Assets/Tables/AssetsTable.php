@@ -68,8 +68,8 @@ class AssetsTable
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => Asset::STATUSES[$state] ?? $state)
-                    ->color(fn (string $state): string => Asset::STATUS_COLORS[$state] ?? 'gray')
+                    ->formatStateUsing(fn (Asset $record): string => $record->getStatusLabel())
+                    ->color(fn (Asset $record): string => $record->getStatusBadgeColor())
                     ->sortable(),
 
                 TextColumn::make('location.name')

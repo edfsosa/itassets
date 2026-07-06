@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Employees;
 
+use App\Filament\Concerns\HasResourcePermissions;
 use App\Filament\Resources\Employees\Pages\CreateEmployee;
 use App\Filament\Resources\Employees\Pages\EditEmployee;
 use App\Filament\Resources\Employees\Pages\ListEmployees;
@@ -19,6 +20,12 @@ use Filament\Tables\Table;
 
 class EmployeeResource extends Resource
 {
+    use HasResourcePermissions;
+
+    protected static function getPermissionName(): string
+    {
+        return 'employee';
+    }
     protected static ?string $model = Employee::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;

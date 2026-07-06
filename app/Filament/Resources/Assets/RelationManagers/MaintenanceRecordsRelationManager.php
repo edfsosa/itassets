@@ -93,13 +93,13 @@ class MaintenanceRecordsRelationManager extends RelationManager
                 TextColumn::make('type')
                     ->label('Tipo')
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => MaintenanceRecord::TYPES[$state] ?? $state),
+                    ->formatStateUsing(fn (MaintenanceRecord $record): string => $record->getTypeLabel()),
 
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => MaintenanceRecord::STATUSES[$state] ?? $state)
-                    ->color(fn (string $state): string => MaintenanceRecord::STATUS_COLORS[$state] ?? 'gray'),
+                    ->formatStateUsing(fn (MaintenanceRecord $record): string => $record->getStatusLabel())
+                    ->color(fn (MaintenanceRecord $record): string => $record->getStatusBadgeColor()),
 
                 TextColumn::make('technician')
                     ->label('Técnico')

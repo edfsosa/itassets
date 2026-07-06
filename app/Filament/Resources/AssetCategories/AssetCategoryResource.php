@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AssetCategories;
 
+use App\Filament\Concerns\HasResourcePermissions;
 use App\Filament\Resources\AssetCategories\Pages\CreateAssetCategory;
 use App\Filament\Resources\AssetCategories\Pages\EditAssetCategory;
 use App\Filament\Resources\AssetCategories\Pages\ListAssetCategories;
@@ -18,6 +19,12 @@ use Filament\Tables\Table;
 
 class AssetCategoryResource extends Resource
 {
+    use HasResourcePermissions;
+
+    protected static function getPermissionName(): string
+    {
+        return 'asset_category';
+    }
     protected static ?string $model = AssetCategory::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;

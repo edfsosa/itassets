@@ -24,6 +24,7 @@ class ListAssets extends ListRecords
                 ->label('Plantilla CSV')
                 ->icon('heroicon-o-document-arrow-down')
                 ->color('gray')
+                ->visible(fn () => auth()->user()?->can('import_asset') ?? false)
                 ->action(function () {
                     return Excel::download(new AssetTemplateExport, 'plantilla_activos.csv');
                 }),
@@ -33,6 +34,7 @@ class ListAssets extends ListRecords
                 ->label('Importar desde CSV / Excel')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->color('success')
+                ->visible(fn () => auth()->user()?->can('import_asset') ?? false)
                 ->form([
                     FileUpload::make('file')
                         ->label('Archivo')

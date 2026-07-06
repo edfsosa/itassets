@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Licenses;
 
+use App\Filament\Concerns\HasResourcePermissions;
 use App\Filament\Resources\Licenses\Pages\CreateLicense;
 use App\Filament\Resources\Licenses\Pages\EditLicense;
 use App\Filament\Resources\Licenses\Pages\ListLicenses;
@@ -19,6 +20,12 @@ use Filament\Tables\Table;
 
 class LicenseResource extends Resource
 {
+    use HasResourcePermissions;
+
+    protected static function getPermissionName(): string
+    {
+        return 'license';
+    }
     protected static ?string $model = License::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedKey;

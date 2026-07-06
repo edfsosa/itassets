@@ -56,7 +56,7 @@ class AssignmentsRelationManager extends RelationManager
             ->filters([
                 Filter::make('active')
                     ->label('Solo activos (sin devolver)')
-                    ->query(fn (Builder $q) => $q->whereNull('returned_at'))
+                    ->query(fn (Builder $q) => $q->active())
                     ->toggle()
                     ->default(),
             ])

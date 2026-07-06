@@ -55,6 +55,16 @@ class Asset extends Model
         'lost'        => 'danger',
     ];
 
+    public function getStatusLabel(): string
+    {
+        return self::STATUSES[$this->status] ?? $this->status;
+    }
+
+    public function getStatusBadgeColor(): string
+    {
+        return self::STATUS_COLORS[$this->status] ?? 'gray';
+    }
+
     public const CONDITIONS = [
         'new'  => 'Nuevo',
         'good' => 'Bueno',

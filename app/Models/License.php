@@ -43,7 +43,10 @@ class License extends Model
     // -------------------------------------------------------------------------
     public function usedSeats(): int
     {
-        return $this->assignments()->whereNull('released_at')->count();
+        if (array_key_exists('active_assignments_count', $this->attributes)) {
+            return $this->active_assignments_count;
+        }
+        return $this->activeAssignments()->count();
     }
 
     public function availableSeats(): int

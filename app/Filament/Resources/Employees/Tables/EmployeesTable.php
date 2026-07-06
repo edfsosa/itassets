@@ -59,12 +59,8 @@ class EmployeesTable
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => Employee::STATUSES[$state] ?? $state)
-                    ->color(fn (string $state): string => match ($state) {
-                        'active'   => 'success',
-                        'inactive' => 'danger',
-                        default    => 'gray',
-                    })
+                    ->formatStateUsing(fn (Employee $record): string => $record->getStatusLabel())
+                    ->color(fn (Employee $record): string => $record->getStatusBadgeColor())
                     ->sortable(),
             ])
             ->filters([
