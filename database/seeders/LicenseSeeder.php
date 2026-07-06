@@ -3,12 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\License;
+use App\Models\Supplier;
 use Illuminate\Database\Seeder;
 
 class LicenseSeeder extends Seeder
 {
     public function run(): void
     {
+        $supplierId = fn (string $name) => Supplier::where('name', $name)->first()?->id;
+
         $licenses = [
             [
                 'product_name'  => 'Microsoft 365 Business Premium',
@@ -18,7 +21,7 @@ class LicenseSeeder extends Seeder
                 'purchase_date' => '2026-01-01',
                 'expiry_date'   => '2027-01-01',
                 'purchase_price' => 12000.00,
-                'supplier_id'   => 5,
+                'supplier_name' => 'Microsoft Licensing',
                 'notes'         => 'Suscripción anual para todo el personal.',
             ],
             [
@@ -29,7 +32,7 @@ class LicenseSeeder extends Seeder
                 'purchase_date' => '2026-01-01',
                 'expiry_date'   => '2027-01-01',
                 'purchase_price' => 3000.00,
-                'supplier_id'   => 5,
+                'supplier_name' => 'Microsoft Licensing',
                 'notes'         => 'Licencias para el equipo de desarrollo.',
             ],
             [
@@ -40,7 +43,7 @@ class LicenseSeeder extends Seeder
                 'purchase_date' => '2026-01-15',
                 'expiry_date'   => '2027-01-15',
                 'purchase_price' => 1800.00,
-                'supplier_id'   => 5,
+                'supplier_name' => 'Microsoft Licensing',
                 'notes'         => 'Suite completa para el equipo de marketing.',
             ],
             [
@@ -51,7 +54,7 @@ class LicenseSeeder extends Seeder
                 'purchase_date' => '2026-02-01',
                 'expiry_date'   => '2027-02-01',
                 'purchase_price' => 900.00,
-                'supplier_id'   => 5,
+                'supplier_name' => 'Microsoft Licensing',
                 'notes'         => 'IDE licenses para el equipo de desarrollo.',
             ],
             [
@@ -62,7 +65,7 @@ class LicenseSeeder extends Seeder
                 'purchase_date' => '2026-01-15',
                 'expiry_date'   => null,
                 'purchase_price' => 3000.00,
-                'supplier_id'   => 5,
+                'supplier_name' => 'Microsoft Licensing',
                 'notes'         => 'Licencias OEM para equipos nuevos.',
             ],
             [
@@ -73,7 +76,7 @@ class LicenseSeeder extends Seeder
                 'purchase_date' => '2026-03-01',
                 'expiry_date'   => '2027-03-01',
                 'purchase_price' => 8000.00,
-                'supplier_id'   => 5,
+                'supplier_name' => 'Microsoft Licensing',
                 'notes'         => 'Plan enterprise para toda la organización.',
             ],
             [
@@ -84,15 +87,25 @@ class LicenseSeeder extends Seeder
                 'purchase_date' => '2025-06-01',
                 'expiry_date'   => null,
                 'purchase_price' => 2500.00,
-                'supplier_id'   => 5,
+                'supplier_name' => 'Microsoft Licensing',
                 'notes'         => 'Licencia perpetua para 4 sockets del Data Center.',
             ],
         ];
 
-        foreach ($licenses as $license) {
+        foreach ($licenses as $data) {
             License::firstOrCreate(
-                ['product_name' => $license['product_name']],
-                $license
+                ['product_name' => $data['product_name']],
+                [
+                    'product_name'  => $data['product_name'],
+                    'license_type'  => $data['license_type'],
+                    'license_key'   => $data['license_key'],
+                    'total_seats'   => $data['total_seats'],
+                    'purchase_date' => $data['purchase_date'],
+                    'expiry_date'   => $data['expiry_date'],
+                    'purchase_price' => $data['purchase_price'],
+                    'supplier_id'   => $supplierId($data['supplier_name']),
+                    'notes'         => $data['notes'],
+                ]
             );
         }
     }
