@@ -16,13 +16,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $user = User::firstOrCreate([
+            'email' => env('ADMIN_EMAIL', 'admin@itassets.test'),
+        ], [
             'name'     => env('ADMIN_NAME', 'Admin'),
-            'email'    => env('ADMIN_EMAIL', 'admin@itassets.test'),
             'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
         ]);
 
         $this->call([
+            RoleSeeder::class,
             DemoSeeder::class,
         ]);
     }
