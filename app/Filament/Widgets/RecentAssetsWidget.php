@@ -13,10 +13,7 @@ class RecentAssetsWidget extends TableWidget
 {
     protected static ?int $sort = 6;
 
-    protected int | string | array $columnSpan = [
-        'default' => 12,
-        'md' => 6,
-    ];
+    protected int | string | array $columnSpan = 1;
 
     protected ?string $pollingInterval = '60s';
 
