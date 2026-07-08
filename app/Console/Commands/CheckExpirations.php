@@ -18,6 +18,8 @@ class CheckExpirations extends Command
 
     public function handle(): void
     {
+        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
         $admins = User::role(['Admin', 'Editor'])->get();
 
         if ($admins->isEmpty()) {

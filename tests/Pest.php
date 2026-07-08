@@ -15,7 +15,7 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
- // ->use(RefreshDatabase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -44,7 +44,92 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function createRolesAndPermissions(): void
 {
-    // ..
+    app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
+    $resources = ['asset', 'assignment', 'employee', 'license',
+        'maintenance_record', 'asset_category', 'supplier', 'location', 'user',
+    ];
+    $actions = ['view_any', 'view', 'create', 'update', 'delete'];
+    $extraPermissions = ['import_asset', 'export_report'];
+
+    foreach ($resources as $resource) {
+        foreach ($actions as $action) {
+            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => "{$action}_{$resource}"]);
+        }
+    }
+    foreach ($extraPermissions as $permission) {
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => $permission]);
+    }
+
+    $admin = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Admin']);
+    $admin->syncPermissions(\Spatie\Permission\Models\Permission::all());
+
+    $editor = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Editor']);
+    $editor->syncPermissions(
+        \Spatie\Permission\Models\Permission::whereNotIn('name', [
+            ...array_map(fn ($r) => "delete_{$r}", $resources),
+            'export_report',
+        ])->pluck('name')
+    );
+
+    $viewer = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Viewer']);
+    $viewer->syncPermissions(
+        \Spatie\Permission\Models\Permission::whereIn('name', [
+            ...array_map(fn ($r) => "view_any_{$r}", $resources),
+            ...array_map(fn ($r) => "view_{$r}", $resources),
+        ])->pluck('name')
+    );
+}
+
+function makeAdminUser(): \App\Models\User
+{
+    createRolesAndPermissions();
+
+    return \App\Models\User::factory()->admin()->create([
+        'email' => 'admin@test.com',
+    ]);
+}
+
+function makeEditorUser(): \App\Models\User
+{
+    createRolesAndPermissions();
+
+    return \App\Models\User::factory()->editor()->create([
+        'email' => 'editor@test.com',
+    ]);
+}
+
+function makeViewerUser(): \App\Models\User
+{
+    createRolesAndPermissions();
+
+    return \App\Models\User::factory()->viewer()->create([
+        'email' => 'viewer@test.com',
+    ]);
+}
+
+function loginAsAdmin(): \App\Models\User
+{
+    $user = makeAdminUser();
+    test()->actingAs($user);
+
+    return $user;
+}
+
+function loginAsEditor(): \App\Models\User
+{
+    $user = makeEditorUser();
+    test()->actingAs($user);
+
+    return $user;
+}
+
+function loginAsViewer(): \App\Models\User
+{
+    $user = makeViewerUser();
+    test()->actingAs($user);
+
+    return $user;
 }

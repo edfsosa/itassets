@@ -5,15 +5,19 @@ namespace App\Services;
 use App\Models\Asset;
 use App\Models\Assignment;
 use App\Models\Employee;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 class AssignmentService
 {
+    public function __construct(
+        private Auth $auth,
+    ) {}
+
     public function assign(Asset $asset, array $data): Assignment
     {
         $assignment = Assignment::create([
             'employee_id' => $data['employee_id'],
-            'assigned_by' => Auth::user()?->name,
+            'assigned_by' => $this->auth->user()?->name,
             'assigned_at' => $data['assigned_at'],
             'notes'       => $data['notes'] ?? null,
         ]);
