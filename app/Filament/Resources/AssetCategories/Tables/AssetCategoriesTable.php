@@ -2,13 +2,11 @@
 
 namespace App\Filament\Resources\AssetCategories\Tables;
 
-use App\Models\AssetCategory;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class AssetCategoriesTable
@@ -20,12 +18,6 @@ class AssetCategoriesTable
                 TextColumn::make('name')
                     ->label('Nombre')
                     ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('type')
-                    ->label('Tipo')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => AssetCategory::TYPES[$state] ?? $state)
                     ->sortable(),
 
                 TextColumn::make('description')
@@ -44,11 +36,7 @@ class AssetCategoriesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                SelectFilter::make('type')
-                    ->label('Tipo')
-                    ->options(AssetCategory::TYPES),
-            ])
+            ->filters([])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),

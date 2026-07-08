@@ -86,7 +86,7 @@ class AssetImport implements ToModel, WithHeadingRow, WithUpserts
         if (isset($this->categories[$name])) return $this->categories[$name];
 
         // Buscar por tipo (case-insensitive)
-        $category = AssetCategory::where('name', $name)->orWhere('type', strtolower($name))->first();
+        $category = AssetCategory::where('name', $name)->first();
         if (! $category) {
             $category = AssetCategory::create([
                 'name'        => $name,

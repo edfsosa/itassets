@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 beforeEach(function () {
     loginAsAdmin();
 
-    AssetCategory::factory()->create(['name' => 'Hardware', 'type' => 'hardware']);
+    AssetCategory::factory()->create(['name' => 'Hardware']);
     Supplier::factory()->create(['name' => 'Tech Distribuidora']);
     Location::factory()->create(['name' => 'Oficina Central']);
 });

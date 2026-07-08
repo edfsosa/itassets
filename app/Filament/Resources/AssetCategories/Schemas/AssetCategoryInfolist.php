@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\AssetCategories\Schemas;
 
-use App\Models\AssetCategory;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -18,14 +17,9 @@ class AssetCategoryInfolist
                     ->schema([
                         TextEntry::make('name')
                             ->label('Nombre')
-                            ->columnSpan(2),
-
-                        TextEntry::make('type')
-                            ->label('Tipo')
-                            ->badge()
-                            ->formatStateUsing(fn (string $state): string => AssetCategory::TYPES[$state] ?? $state),
+                            ->columnSpanFull(),
                     ])
-                    ->columns(3),
+                    ->columns(1),
 
                 Section::make('Descripción')
                     ->icon('heroicon-o-document-text')

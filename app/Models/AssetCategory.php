@@ -15,18 +15,9 @@ class AssetCategory extends Model
 
     protected $fillable = [
         'name',
-        'type',
         'description',
         'created_by',
         'updated_by',
-    ];
-
-    public const TYPES = [
-        'hardware'       => 'Hardware',
-        'software'       => 'Software / Licencias',
-        'peripheral'     => 'Periféricos',
-        'infrastructure' => 'Infraestructura',
-        'mobile'         => 'Dispositivos Móviles',
     ];
 
     public function assets(): HasMany
