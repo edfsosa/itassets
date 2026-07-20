@@ -21,6 +21,10 @@ jobs:
 
       - run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - run: cp .env.example .env
+
+      - run: php artisan key:generate
+
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
