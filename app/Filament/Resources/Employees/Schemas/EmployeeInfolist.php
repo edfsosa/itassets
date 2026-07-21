@@ -24,7 +24,7 @@ class EmployeeInfolist
                             ->label('Legajo'),
 
                         TextEntry::make('document_number')
-                            ->label('C.I. / Documento'),
+                            ->label('Documento de identidad'),
 
                         TextEntry::make('status')
                             ->label('Estado')
