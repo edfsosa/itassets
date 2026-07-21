@@ -21,7 +21,8 @@ class ProductionSeeder extends Seeder
             'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
         ]);
 
-        Setting::set('exchange_rate_usd_pyg', 6500);
+        Setting::set('base_currency', 'USD');
+        Setting::set('display_locale', 'en_US');
 
         $this->call([
             RoleSeeder::class,

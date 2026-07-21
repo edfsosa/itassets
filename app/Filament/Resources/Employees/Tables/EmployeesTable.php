@@ -24,7 +24,7 @@ class EmployeesTable
                     ->placeholder('—'),
 
                 TextColumn::make('document_number')
-                    ->label('C.I.')
+                    ->label('Documento de identidad')
                     ->searchable()
                     ->placeholder('—'),
 

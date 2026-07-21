@@ -32,7 +32,7 @@ class PdfSettings extends Page implements HasForms
     public function mount(): void
     {
         $this->form->fill([
-            'company_name' => Setting::get('company_name', 'Claro'),
+            'company_name' => Setting::get('company_name', ''),
             'pdf_intro'    => Setting::get('pdf_intro', ''),
             'pdf_clauses'  => collect(Setting::get('pdf_clauses', []))->map(fn ($clause) => ['clause' => $clause])->toArray(),
             'pdf_closing'  => Setting::get('pdf_closing', ''),
@@ -51,7 +51,7 @@ class PdfSettings extends Page implements HasForms
 
                 Textarea::make('pdf_intro')
                     ->label('Texto introductorio')
-                    ->helperText('Usá :company, :date, :employee, :ci, :position como marcadores.')
+                    ->helperText('Usá :company, :date, :employee, :document, :position como marcadores.')
                     ->rows(4)
                     ->columnSpanFull(),
 

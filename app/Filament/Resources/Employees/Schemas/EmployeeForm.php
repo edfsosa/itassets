@@ -26,7 +26,7 @@ class EmployeeForm
                     ->columnSpan(1),
 
                 TextInput::make('document_number')
-                    ->label('C.I. / Documento')
+                    ->label('Documento de identidad')
                     ->maxLength(50)
                     ->columnSpan(1),
 
