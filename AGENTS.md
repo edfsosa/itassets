@@ -33,7 +33,7 @@ PHP 8.3+, MySQL in dev, SQLite in-memory in tests.
 
 ## Key patterns
 
-- **Currency**: `format_gs()` helper in `app/helpers.php` (autoloaded). Converts USD → Gs. Uses `exchange_rate_usd_pyg` from `Setting` model (key-value store in `settings` table). Configurable via Filament page `GeneralSettings`.
+- **Currency**: `format_currency()` helper in `app/helpers.php` (autoloaded). Formats amounts via `NumberFormatter` (ext-intl). Amounts are stored in the installation's `base_currency` Setting; `display_currency` + `exchange_rate` are optional, applying a conversion only when a secondary reporting currency differs from `base_currency`. `display_locale` controls symbol/number formatting. Configurable via Filament page `GeneralSettings` ("Regional" section).
 - **Setting model**: `App\Models\Setting::get($key, $default)` / `::set($key, $value)`.
 - **Notifications**: `WarrantyExpiryNotification`, `LicenseExpiryNotification`, `MaintenanceAlertNotification`. Sent to Admin + Editor roles.
 - **PDF**: Assignment PDFs via DomPDF at `GET /assignments/{assignment}/pdf`.
