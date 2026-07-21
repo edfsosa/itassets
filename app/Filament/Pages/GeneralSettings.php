@@ -4,11 +4,13 @@ namespace App\Filament\Pages;
 
 use App\Models\Setting;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
@@ -31,7 +33,11 @@ class GeneralSettings extends Page implements HasForms
     public function mount(): void
     {
         $this->form->fill([
-            'exchange_rate_usd_pyg' => Setting::get('exchange_rate_usd_pyg', 6500),
+            'base_currency' => Setting::get('base_currency', 'USD'),
+            'display_currency' => Setting::get('display_currency', ''),
+            'exchange_rate' => Setting::get('exchange_rate', 1),
+            'display_locale' => Setting::get('display_locale', 'en_US'),
+            'timezone' => Setting::get('timezone', config('app.timezone')),
         ]);
     }
 
@@ -39,13 +45,45 @@ class GeneralSettings extends Page implements HasForms
     {
         return $schema
             ->components([
-                TextInput::make('exchange_rate_usd_pyg')
-                    ->label('Tipo de cambio USD → Gs.')
-                    ->helperText('Ej: 6500. Cada dólar se multiplica por este valor al mostrar precios en guaraníes.')
-                    ->numeric()
-                    ->required()
-                    ->minValue(1)
-                    ->columnSpan(2),
+                Section::make('Regional')
+                    ->description('Moneda y configuración regional de esta instalación.')
+                    ->schema([
+                        TextInput::make('base_currency')
+                            ->label('Moneda base')
+                            ->helperText('Código ISO 4217 en el que se cargan los montos (ej. PYG, USD, ARS).')
+                            ->required()
+                            ->maxLength(3)
+                            ->columnSpan(1),
+
+                        TextInput::make('display_currency')
+                            ->label('Moneda de reporte (opcional)')
+                            ->helperText('Si se completa y difiere de la moneda base, los montos se muestran también convertidos a esta moneda.')
+                            ->maxLength(3)
+                            ->columnSpan(1),
+
+                        TextInput::make('exchange_rate')
+                            ->label('Tasa de cambio (moneda base → moneda de reporte)')
+                            ->helperText('Solo se usa si la moneda de reporte difiere de la moneda base.')
+                            ->numeric()
+                            ->minValue(0)
+                            ->columnSpan(1),
+
+                        TextInput::make('display_locale')
+                            ->label('Locale de formato')
+                            ->helperText('Ej: es_PY, es_AR, en_US. Define el símbolo y separadores de miles/decimales.')
+                            ->required()
+                            ->maxLength(10)
+                            ->columnSpan(1),
+
+                        Select::make('timezone')
+                            ->label('Zona horaria')
+                            ->helperText('Solo informativo por ahora.')
+                            ->options(array_combine(\DateTimeZone::listIdentifiers(), \DateTimeZone::listIdentifiers()))
+                            ->searchable()
+                            ->required()
+                            ->columnSpan(2),
+                    ])
+                    ->columns(2),
 
                 \Filament\Schemas\Components\Actions::make([
                     Action::make('save')
@@ -53,7 +91,6 @@ class GeneralSettings extends Page implements HasForms
                         ->submit('save'),
                 ])->columnSpanFull(),
             ])
-            ->columns(2)
             ->statePath('data')
             ->live();
     }
@@ -62,7 +99,11 @@ class GeneralSettings extends Page implements HasForms
     {
         $data = $this->form->getState();
 
-        Setting::set('exchange_rate_usd_pyg', $data['exchange_rate_usd_pyg']);
+        Setting::set('base_currency', $data['base_currency']);
+        Setting::set('display_currency', $data['display_currency']);
+        Setting::set('exchange_rate', $data['exchange_rate']);
+        Setting::set('display_locale', $data['display_locale']);
+        Setting::set('timezone', $data['timezone']);
 
         Notification::make()
             ->title('Configuración guardada correctamente')
