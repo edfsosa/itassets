@@ -27,7 +27,7 @@
 <body>
 
     @php
-        $company = \App\Models\Setting::get('company_name', 'CLARO');
+        $company = \App\Models\Setting::get('company_name', '');
         $intro   = \App\Models\Setting::get('pdf_intro', '');
         $clauses = \App\Models\Setting::get('pdf_clauses', []);
         $closing = \App\Models\Setting::get('pdf_closing', '');
@@ -37,7 +37,7 @@
 
     @if ($intro)
         <p>{{ str_replace(
-            [':company', ':date', ':employee', ':ci', ':position'],
+            [':company', ':date', ':employee', ':document', ':position'],
             [$company, $assignment->assigned_at->format('d/m/Y'), optional($assignment->employee)->name ?? '—', optional($assignment->employee)->document_number ?? '—', optional($assignment->employee)->position ?? '—'],
             $intro
         ) }}</p>
@@ -104,7 +104,7 @@
             <td align="center">
                 <div><strong>{{ optional($assignment->employee)->name ?? '—' }}</strong></div>
                 <div style="margin-top: 4px; font-size: 11px;">
-                    C.I.: {{ optional($assignment->employee)->document_number ?? '—' }}
+                    Documento: {{ optional($assignment->employee)->document_number ?? '—' }}
                 </div>
                 <div style="margin-top: 30px;">
                     <div class="signature-line">Firma</div>
