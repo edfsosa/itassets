@@ -42,7 +42,7 @@ it('formats in a non-Paraguay base currency and locale', function () {
     Setting::set('base_currency', 'EUR');
     Setting::set('display_locale', 'de_DE');
 
-    expect(format_currency(6500))->toBe("6.500,00\u{a0}€");
+    expect(format_currency(6500))->toBe('6.500,00 €');
 });
 
 it('converts between two non-USD, non-PYG currencies', function () {
