@@ -56,6 +56,11 @@ class Employee extends Model
         return $this->hasMany(Assignment::class)->whereNull('returned_at');
     }
 
+    public function licenseAssignments(): HasMany
+    {
+        return $this->hasMany(LicenseAssignment::class);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

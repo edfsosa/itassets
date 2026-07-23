@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Licenses\RelationManagers;
 use App\Filament\Concerns\HasRelationManagerPermissions;
 use App\Models\Asset;
 use App\Models\Employee;
+use App\Models\LicenseAssignment;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteBulkAction;
@@ -49,11 +50,19 @@ class AssignmentsRelationManager extends RelationManager
 
                 Select::make('employee_id')
                     ->label('Empleado (opcional)')
-                    ->options(
-                        Employee::where('status', 'active')
+                    ->options(function (?LicenseAssignment $record): array {
+                        return Employee::query()
+                            ->where(function ($query) use ($record) {
+                                $query->where('status', 'active');
+
+                                if ($record?->employee_id) {
+                                    $query->orWhere('id', $record->employee_id);
+                                }
+                            })
                             ->orderBy('name')
                             ->pluck('name', 'id')
-                    )
+                            ->toArray();
+                    })
                     ->searchable()
                     ->nullable()
                     ->columnSpan(1),
