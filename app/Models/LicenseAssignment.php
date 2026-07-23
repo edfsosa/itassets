@@ -43,6 +43,19 @@ class LicenseAssignment extends Model
                     'license_id' => "La licencia \"{$license->product_name}\" no tiene seats disponibles ({$license->usedSeats()}/{$license->total_seats} en uso).",
                 ]);
             }
+
+            $duplicate = static::query()
+                ->where('license_id', $assignment->license_id)
+                ->whereNull('released_at')
+                ->when($assignment->asset_id, fn ($q) => $q->where('asset_id', $assignment->asset_id))
+                ->when($assignment->employee_id, fn ($q) => $q->where('employee_id', $assignment->employee_id))
+                ->exists();
+
+            if ($duplicate) {
+                throw ValidationException::withMessages([
+                    'asset_id' => 'Ya existe una asignación activa de esta licencia para el mismo activo o empleado.',
+                ]);
+            }
         });
     }
 

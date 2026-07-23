@@ -37,6 +37,13 @@ class LicenseForm
                             ->numeric()
                             ->minValue(1)
                             ->default(1)
+                            ->rule(function (?License $record) {
+                                return function (string $attribute, $value, \Closure $fail) use ($record) {
+                                    if ($record && $value < $record->usedSeats()) {
+                                        $fail("No se puede bajar de {$record->usedSeats()} puestos: hay {$record->usedSeats()} asignaciones activas.");
+                                    }
+                                };
+                            })
                             ->columnSpan(1),
 
                         TextInput::make('license_key')
