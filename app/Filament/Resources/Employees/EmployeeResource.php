@@ -8,6 +8,7 @@ use App\Filament\Resources\Employees\Pages\EditEmployee;
 use App\Filament\Resources\Employees\Pages\ListEmployees;
 use App\Filament\Resources\Employees\Pages\ViewEmployee;
 use App\Filament\Resources\Employees\RelationManagers\AssignmentsRelationManager;
+use App\Filament\Resources\Employees\RelationManagers\LicenseAssignmentsRelationManager;
 use App\Filament\Resources\Employees\Schemas\EmployeeForm;
 use App\Filament\Resources\Employees\Schemas\EmployeeInfolist;
 use App\Filament\Resources\Employees\Tables\EmployeesTable;
@@ -62,6 +63,7 @@ class EmployeeResource extends Resource
     {
         return [
             AssignmentsRelationManager::class,
+            LicenseAssignmentsRelationManager::class,
             ActivityRelationManager::class,
         ];
     }

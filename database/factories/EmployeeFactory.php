@@ -18,7 +18,7 @@ class EmployeeFactory extends Factory
             'phone' => $this->faker->optional()->phoneNumber(),
             'department' => $this->faker->randomElement(['TI', 'RRHH', 'Ventas', 'Contabilidad', 'Marketing', 'Operaciones']),
             'position' => $this->faker->jobTitle(),
-            'document_number' => $this->faker->optional()->numerify('########'),
+            'document_number' => $this->faker->unique()->optional()->numerify('########'),
             'status' => 'active',
         ];
     }

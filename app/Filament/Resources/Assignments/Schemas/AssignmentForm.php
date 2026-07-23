@@ -21,11 +21,19 @@ class AssignmentForm
                 Select::make('employee_id')
                     ->label('Empleado')
                     ->required()
-                    ->options(
-                        Employee::where('status', 'active')
+                    ->options(function (?Assignment $record): array {
+                        return Employee::query()
+                            ->where(function ($query) use ($record) {
+                                $query->where('status', 'active');
+
+                                if ($record) {
+                                    $query->orWhere('id', $record->employee_id);
+                                }
+                            })
                             ->orderBy('name')
                             ->pluck('name', 'id')
-                    )
+                            ->toArray();
+                    })
                     ->searchable()
                     ->columnSpan(1),
 

@@ -41,9 +41,19 @@ class AssignmentsRelationManager extends RelationManager
                 Select::make('employee_id')
                     ->label('Empleado')
                     ->required()
-                    ->options(
-                        Employee::where('status', 'active')->orderBy('name')->pluck('name', 'id')
-                    )
+                    ->options(function (?Assignment $record): array {
+                        return Employee::query()
+                            ->where(function ($query) use ($record) {
+                                $query->where('status', 'active');
+
+                                if ($record) {
+                                    $query->orWhere('id', $record->employee_id);
+                                }
+                            })
+                            ->orderBy('name')
+                            ->pluck('name', 'id')
+                            ->toArray();
+                    })
                     ->searchable()
                     ->columnSpan(1),
 
@@ -55,7 +65,7 @@ class AssignmentsRelationManager extends RelationManager
                     ->columnSpan(1),
 
                 TextInput::make('charger_serial')
-                    ->label('Cargador SN')
+                    ->label('Cargador N/S')
                     ->maxLength(100)
                     ->columnSpan(1),
 

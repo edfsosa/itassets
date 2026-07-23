@@ -28,6 +28,7 @@ class EmployeeForm
                 TextInput::make('document_number')
                     ->label('Documento de identidad')
                     ->maxLength(50)
+                    ->unique(ignoreRecord: true)
                     ->columnSpan(1),
 
                 Select::make('status')
@@ -51,6 +52,7 @@ class EmployeeForm
                     ->label('Correo electrónico')
                     ->email()
                     ->maxLength(255)
+                    ->unique(ignoreRecord: true)
                     ->columnSpan(1),
 
                 TextInput::make('phone')
