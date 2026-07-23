@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Licenses\RelationManagers;
 
+use App\Filament\Concerns\HasRelationManagerPermissions;
 use App\Models\Asset;
 use App\Models\Employee;
 use Filament\Actions\BulkActionGroup;
@@ -20,9 +21,16 @@ use Illuminate\Database\Eloquent\Builder;
 
 class AssignmentsRelationManager extends RelationManager
 {
+    use HasRelationManagerPermissions;
+
     protected static string $relationship = 'assignments';
 
     protected static ?string $title = 'Asignaciones de esta licencia';
+
+    protected function getPermissionName(): string
+    {
+        return 'assignment';
+    }
 
     public function form(Schema $schema): Schema
     {

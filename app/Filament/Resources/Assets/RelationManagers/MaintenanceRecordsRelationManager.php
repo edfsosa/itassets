@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Assets\RelationManagers;
 
+use App\Filament\Concerns\HasRelationManagerPermissions;
 use App\Models\MaintenanceRecord;
 use App\Models\Supplier;
 use Filament\Actions\BulkActionGroup;
@@ -20,9 +21,16 @@ use Filament\Tables\Table;
 
 class MaintenanceRecordsRelationManager extends RelationManager
 {
+    use HasRelationManagerPermissions;
+
     protected static string $relationship = 'maintenanceRecords';
 
     protected static ?string $title = 'Historial de mantenimientos';
+
+    protected function getPermissionName(): string
+    {
+        return 'maintenance_record';
+    }
 
     public function form(Schema $schema): Schema
     {
