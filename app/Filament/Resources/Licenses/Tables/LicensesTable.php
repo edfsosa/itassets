@@ -8,9 +8,12 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class LicensesTable
 {
@@ -63,6 +66,34 @@ class LicensesTable
                 SelectFilter::make('supplier_id')
                     ->label('Proveedor')
                     ->options(Supplier::pluck('name', 'id')),
+
+                Filter::make('expiry_status')
+                    ->label('Estado de vencimiento')
+                    ->form([
+                        Select::make('value')
+                            ->label('Estado')
+                            ->options([
+                                'expired' => 'Vencidas',
+                                'expiring_soon' => 'Por vencer (≤60 días)',
+                                'valid' => 'Vigentes',
+                            ]),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return match ($data['value'] ?? null) {
+                            'expired' => $query->whereDate('expiry_date', '<', now()),
+                            'expiring_soon' => $query->whereBetween('expiry_date', [now(), now()->addDays(60)]),
+                            'valid' => $query->where(function ($q) {
+                                $q->whereNull('expiry_date')->orWhereDate('expiry_date', '>', now()->addDays(60));
+                            }),
+                            default => $query,
+                        };
+                    })
+                    ->indicateUsing(fn (array $data): ?string => match ($data['value'] ?? null) {
+                        'expired' => 'Vencidas',
+                        'expiring_soon' => 'Por vencer (≤60 días)',
+                        'valid' => 'Vigentes',
+                        default => null,
+                    }),
             ])
             ->recordActions([
                 ViewAction::make(),
