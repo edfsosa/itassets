@@ -45,7 +45,7 @@ class AssignmentInfolist
                                     '<strong>[%s] %s</strong>%s',
                                     e($a->asset_tag),
                                     e($a->name),
-                                    $a->pivot->charger_serial ? '<br><small>Cargador SN: ' . e($a->pivot->charger_serial) . '</small>' : ''
+                                    $a->pivot->charger_serial ? '<br><small>Cargador N/S: ' . e($a->pivot->charger_serial) . '</small>' : ''
                                 ))
                                 ->implode('<hr class="my-1">')),
                     ]),
