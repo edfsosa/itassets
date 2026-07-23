@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Employees\RelationManagers;
 
+use App\Filament\Concerns\HasRelationManagerPermissions;
 use App\Models\Assignment;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -15,9 +16,16 @@ use Illuminate\Database\Eloquent\Builder;
 
 class AssignmentsRelationManager extends RelationManager
 {
+    use HasRelationManagerPermissions;
+
     protected static string $relationship = 'assignments';
 
     protected static ?string $title = 'Activos asignados';
+
+    protected function getPermissionName(): string
+    {
+        return 'assignment';
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -56,7 +64,7 @@ class AssignmentsRelationManager extends RelationManager
             ->filters([
                 Filter::make('active')
                     ->label('Solo activos (sin devolver)')
-                    ->query(fn (Builder $q) => $q->active())
+                    ->query(fn (Builder $q) => $q->whereNull('returned_at'))
                     ->toggle()
                     ->default(),
             ])

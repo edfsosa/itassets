@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Assets\RelationManagers;
 
+use App\Filament\Concerns\HasRelationManagerPermissions;
 use App\Models\Assignment;
 use App\Models\Employee;
 use Filament\Actions\Action;
@@ -23,9 +24,16 @@ use Illuminate\Database\Eloquent\Builder;
 
 class AssignmentsRelationManager extends RelationManager
 {
+    use HasRelationManagerPermissions;
+
     protected static string $relationship = 'assignments';
 
     protected static ?string $title = 'Historial de asignaciones';
+
+    protected function getPermissionName(): string
+    {
+        return 'assignment';
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -105,7 +113,7 @@ class AssignmentsRelationManager extends RelationManager
             ->filters([
                 Filter::make('active')
                     ->label('Solo asignaciones activas')
-                    ->query(fn (Builder $q) => $q->active())
+                    ->query(fn (Builder $q) => $q->whereNull('returned_at'))
                     ->toggle(),
             ])
             ->headerActions([
