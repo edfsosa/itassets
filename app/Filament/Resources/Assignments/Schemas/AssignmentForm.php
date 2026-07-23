@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Assignments\Schemas;
 
 use App\Models\Asset;
+use App\Models\Assignment;
 use App\Models\Employee;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
@@ -53,10 +54,19 @@ class AssignmentForm
                         Select::make('asset_id')
                             ->label('Activo')
                             ->required()
-                            ->options(fn (): array => Asset::whereIn('status', ['available', 'stock'])
-                                ->get()
-                                ->mapWithKeys(fn ($a) => [$a->id => "[{$a->asset_tag}] {$a->name} ({$a->model})"])
-                                ->toArray())
+                            ->options(function (?Assignment $record): array {
+                                return Asset::query()
+                                    ->where(function ($query) use ($record) {
+                                        $query->whereIn('status', ['available', 'stock']);
+
+                                        if ($record) {
+                                            $query->orWhereIn('id', $record->assets()->pluck('assets.id'));
+                                        }
+                                    })
+                                    ->get()
+                                    ->mapWithKeys(fn ($a) => [$a->id => "[{$a->asset_tag}] {$a->name} ({$a->model})"])
+                                    ->toArray();
+                            })
                             ->searchable()
                             ->columnSpan(3),
 
