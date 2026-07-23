@@ -51,7 +51,7 @@ class ViewAsset extends ViewRecord
                         ->displayFormat('d/m/Y'),
 
                     TextInput::make('charger_serial')
-                        ->label('Cargador SN')
+                        ->label('Cargador N/S')
                         ->maxLength(100),
 
                     TextInput::make('ticket_number')
