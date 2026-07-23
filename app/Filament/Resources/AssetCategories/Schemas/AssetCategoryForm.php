@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AssetCategories\Schemas;
 
+use App\Models\AssetCategory;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -16,6 +17,7 @@ class AssetCategoryForm
                     ->label('Nombre')
                     ->required()
                     ->maxLength(255)
+                    ->unique(AssetCategory::class, 'name', ignoreRecord: true)
                     ->columnSpan(1),
 
                 Textarea::make('description')
