@@ -14,7 +14,7 @@ if (! function_exists('format_currency')) {
         $rate = $displayCurrency === $baseCurrency ? 1 : (float) Setting::get('exchange_rate', 1);
         $locale = Setting::get('display_locale', 'en_US');
 
-        $converted = round($amount * $rate, 2, PHP_ROUND_HALF_UP);
+        $converted = round(round($amount * $rate, 6), 2, PHP_ROUND_HALF_UP);
         $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
         $formatted = $formatter->formatCurrency($converted, $displayCurrency);
 
