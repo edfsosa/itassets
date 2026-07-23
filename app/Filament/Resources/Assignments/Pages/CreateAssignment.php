@@ -25,6 +25,7 @@ class CreateAssignment extends CreateRecord
     {
         $this->assetsToAttach = $data['assets'] ?? [];
         unset($data['assets']);
+        $data['assigned_by'] = auth()->user()?->name;
         return $data;
     }
 

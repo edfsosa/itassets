@@ -2,8 +2,10 @@
 
 use App\Filament\Resources\Assignments\Pages\CreateAssignment;
 use App\Filament\Resources\Assignments\Pages\EditAssignment;
+use App\Filament\Resources\Assignments\Pages\ListAssignments;
 use App\Models\Asset;
 use App\Models\Assignment;
+use App\Models\Employee;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -62,4 +64,28 @@ it('does not offer assets already assigned to another assignment when creating',
         ->assertHasFormErrors(['assets.0.asset_id']);
 
     $this->assertTrue($available->exists);
+});
+
+it('fills in assigned_by from the authenticated user when created from this resource', function () {
+    $admin = auth()->user();
+    $employee = Employee::factory()->create();
+    $asset = Asset::factory()->available()->create();
+
+    Livewire::test(CreateAssignment::class)
+        ->fillForm([
+            'employee_id' => $employee->id,
+            'assigned_at' => now()->toDateString(),
+            'assets' => [
+                ['asset_id' => $asset->id],
+            ],
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $assignment = Assignment::where('employee_id', $employee->id)->first();
+    expect($assignment->assigned_by)->toBe($admin->name);
+});
+
+it('has an employee filter on the assignments table', function () {
+    Livewire::test(ListAssignments::class)->assertTableFilterExists('employee_id');
 });
