@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class MaintenanceRecordForm
@@ -42,6 +43,19 @@ class MaintenanceRecordForm
                             ->required()
                             ->options(MaintenanceRecord::STATUSES)
                             ->default('pending')
+                            ->live()
+                            ->columnSpan(1),
+
+                        Select::make('new_asset_status')
+                            ->label('Nuevo estado del activo')
+                            ->options([
+                                'available' => 'Disponible',
+                                'retired' => 'Dado de baja',
+                                'lost' => 'Perdido / Robado',
+                            ])
+                            ->default('available')
+                            ->visible(fn (Get $get): bool => $get('status') === 'completed')
+                            ->required(fn (Get $get): bool => $get('status') === 'completed')
                             ->columnSpan(1),
 
                         Textarea::make('description')

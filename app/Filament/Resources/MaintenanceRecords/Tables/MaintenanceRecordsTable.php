@@ -9,8 +9,10 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MaintenanceRecordsTable
 {
@@ -81,6 +83,12 @@ class MaintenanceRecordsTable
                 SelectFilter::make('supplier_id')
                     ->label('Proveedor')
                     ->options(Supplier::pluck('name', 'id')),
+
+                Filter::make('prolonged')
+                    ->label('Prolongado (>7 días)')
+                    ->query(fn (Builder $query) => $query->whereIn('status', ['in_progress', 'pending'])
+                        ->whereDate('started_at', '<=', now()->subDays(7)))
+                    ->toggle(),
             ])
             ->recordActions([
                 ViewAction::make(),

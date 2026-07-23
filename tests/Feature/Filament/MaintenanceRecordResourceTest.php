@@ -97,6 +97,7 @@ it('sets the related asset back to available when a record is edited to complete
     Livewire::test(EditMaintenanceRecord::class, ['record' => $record->getRouteKey()])
         ->fillForm([
             'status' => 'completed',
+            'new_asset_status' => 'available',
             'completed_at' => now()->toDateString(),
             'resolution' => 'Teclado reemplazado',
         ])
@@ -140,4 +141,51 @@ it('formats the cost column using the configured currency instead of a hardcoded
     MaintenanceRecord::factory()->create(['cost' => 100]);
 
     Livewire::test(ListMaintenanceRecords::class)->assertSee('100,00 €');
+});
+
+it('reverts the asset to available when its only active maintenance record is deleted', function () {
+    $asset = Asset::factory()->maintenance()->create();
+    $record = MaintenanceRecord::factory()->inProgress()->for($asset)->create();
+
+    $record->delete();
+
+    expect($asset->fresh()->status)->toBe('available');
+});
+
+it('does not revert the asset when another active maintenance record remains', function () {
+    $asset = Asset::factory()->maintenance()->create();
+    $record = MaintenanceRecord::factory()->inProgress()->for($asset)->create();
+    MaintenanceRecord::factory()->inProgress()->for($asset)->create();
+
+    $record->delete();
+
+    expect($asset->fresh()->status)->toBe('maintenance');
+});
+
+it('lets the user choose the resulting asset status when completing a maintenance record', function () {
+    $asset = Asset::factory()->maintenance()->create();
+    $record = MaintenanceRecord::factory()->inProgress()->for($asset)->create();
+
+    Livewire::test(EditMaintenanceRecord::class, ['record' => $record->getRouteKey()])
+        ->fillForm([
+            'status' => 'completed',
+            'new_asset_status' => 'retired',
+            'completed_at' => now()->toDateString(),
+            'resolution' => 'Equipo dado de baja',
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($asset->fresh()->status)->toBe('retired');
+});
+
+it('filters prolonged maintenance records (more than 7 days old, still open)', function () {
+    $prolonged = MaintenanceRecord::factory()->inProgress()->create(['started_at' => now()->subDays(10)]);
+    $recent = MaintenanceRecord::factory()->inProgress()->create(['started_at' => now()->subDays(2)]);
+    $completed = MaintenanceRecord::factory()->completed()->create(['started_at' => now()->subDays(10)]);
+
+    Livewire::test(ListMaintenanceRecords::class)
+        ->filterTable('prolonged')
+        ->assertCanSeeTableRecords([$prolonged])
+        ->assertCanNotSeeTableRecords([$recent, $completed]);
 });

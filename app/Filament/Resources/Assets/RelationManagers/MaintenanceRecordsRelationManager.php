@@ -14,6 +14,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -47,6 +48,19 @@ class MaintenanceRecordsRelationManager extends RelationManager
                     ->required()
                     ->options(MaintenanceRecord::STATUSES)
                     ->default('pending')
+                    ->live()
+                    ->columnSpan(1),
+
+                Select::make('new_asset_status')
+                    ->label('Nuevo estado del activo')
+                    ->options([
+                        'available' => 'Disponible',
+                        'retired' => 'Dado de baja',
+                        'lost' => 'Perdido / Robado',
+                    ])
+                    ->default('available')
+                    ->visible(fn (Get $get): bool => $get('status') === 'completed')
+                    ->required(fn (Get $get): bool => $get('status') === 'completed')
                     ->columnSpan(1),
 
                 Textarea::make('description')
@@ -87,6 +101,11 @@ class MaintenanceRecordsRelationManager extends RelationManager
 
                 Textarea::make('resolution')
                     ->label('Resolución / Diagnóstico')
+                    ->rows(2)
+                    ->columnSpanFull(),
+
+                Textarea::make('notes')
+                    ->label('Notas adicionales')
                     ->rows(2)
                     ->columnSpanFull(),
             ])
@@ -137,7 +156,14 @@ class MaintenanceRecordsRelationManager extends RelationManager
                     ->label('Nuevo mantenimiento'),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->after(function (MaintenanceRecord $record, array $data): void {
+                        $newAssetStatus = $data['new_asset_status'] ?? null;
+
+                        if ($newAssetStatus && $record->status === 'completed' && $record->asset) {
+                            $record->asset->update(['status' => $newAssetStatus]);
+                        }
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
