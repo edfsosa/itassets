@@ -21,8 +21,8 @@ jobs:
       SSH_PRIVATE_KEY: ${{ secrets.ITASSETS_SSH_PRIVATE_KEY }}
       DEPLOY_PATH: ${{ secrets.ITASSETS_DEPLOY_PATH }}
       APP_URL: ${{ secrets.ITASSETS_APP_URL }}
-      SMTP_HOST: ${{ secrets.ITASSETS_SMTP_HOST }}
-      SMTP_PORT: ${{ secrets.ITASSETS_SMTP_PORT }}
-      SMTP_USER: ${{ secrets.ITASSETS_SMTP_USER }}
-      SMTP_PASS: ${{ secrets.ITASSETS_SMTP_PASS }}
-      NOTIFY_EMAIL: ${{ secrets.ITASSETS_NOTIFY_EMAIL }}
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
