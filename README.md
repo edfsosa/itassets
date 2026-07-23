@@ -3,9 +3,11 @@
 ![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php)
 ![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel)
 ![Filament](https://img.shields.io/badge/Filament-5-EB8B5E?logo=filament)
-![Tests](https://img.shields.io/badge/tests-81_passing-green)
+![Tests](https://img.shields.io/badge/tests-124_passing-green)
 
 Sistema de gestión de activos informáticos construido con **Laravel 13** + **Filament 5**. Permite administrar el ciclo de vida completo de activos de TI: adquisición, asignación, mantenimiento y baja.
+
+Para entender el *por qué* detrás de las decisiones de diseño (no solo el *qué*), ver [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Stack
 
@@ -70,7 +72,7 @@ El seeder crea un usuario administrador por defecto (configurable en `.env`):
 php artisan test
 ```
 
-**81 tests** · **165 assertions** · Cobertura: modelos, servicios, comandos, notificaciones, Filament, importación/exportación.
+**124 tests** · **290 assertions** · Cobertura: modelos, servicios, comandos, notificaciones, Filament, importación/exportación.
 
 ## Scripts útiles
 
