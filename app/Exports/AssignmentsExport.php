@@ -35,7 +35,7 @@ class AssignmentsExport implements FromQuery, WithHeadings, WithMapping
         return [
             $assignment->id,
             $assignment->employee?->name ?? '—',
-            $assignment->employee?->department ?? '—',
+            $assignment->employee?->department?->name ?? '—',
             $assignment->assets->map(fn ($a) => "[{$a->asset_tag}] {$a->name}")->implode(', '),
             $assignment->assigned_by ?? '—',
             $assignment->assigned_at?->format('d/m/Y') ?? '—',

@@ -38,9 +38,11 @@ class EmployeeForm
                     ->default('active')
                     ->columnSpan(1),
 
-                TextInput::make('department')
+                Select::make('department_id')
                     ->label('Departamento')
-                    ->maxLength(100)
+                    ->relationship('department', 'name')
+                    ->searchable()
+                    ->preload()
                     ->columnSpan(1),
 
                 TextInput::make('position')

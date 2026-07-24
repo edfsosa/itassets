@@ -33,7 +33,7 @@ class EmployeesTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('department')
+                TextColumn::make('department.name')
                     ->label('Departamento')
                     ->searchable()
                     ->sortable()
@@ -73,6 +73,10 @@ class EmployeesTable
                 SelectFilter::make('status')
                     ->label('Estado')
                     ->options(Employee::STATUSES),
+
+                SelectFilter::make('department_id')
+                    ->label('Departamento')
+                    ->relationship('department', 'name'),
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,7 +17,7 @@ class EmployeeFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->companyEmail(),
             'phone' => $this->faker->optional()->numerify('###-###-####'),
-            'department' => $this->faker->randomElement(['TI', 'RRHH', 'Ventas', 'Contabilidad', 'Marketing', 'Operaciones']),
+            'department_id' => Department::factory(),
             'position' => $this->faker->jobTitle(),
             'document_number' => $this->faker->unique()->optional()->numerify('########'),
             'status' => 'active',

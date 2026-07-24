@@ -13,6 +13,7 @@ class DemoSeeder extends Seeder
             AssetCategorySeeder::class,
             SupplierSeeder::class,
             LocationSeeder::class,
+            DepartmentSeeder::class,
             EmployeeSeeder::class,
             AssetSeeder::class,
             AssignmentSeeder::class,
