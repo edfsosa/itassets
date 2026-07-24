@@ -15,7 +15,7 @@ class SupplierFactory extends Factory
             'name' => $this->faker->company(),
             'contact_name' => $this->faker->optional()->name(),
             'email' => $this->faker->optional()->companyEmail(),
-            'phone' => $this->faker->optional()->phoneNumber(),
+            'phone' => $this->faker->optional()->numerify('###-###-####'),
             'website' => $this->faker->optional()->url(),
             'notes' => $this->faker->optional()->text(100),
         ];

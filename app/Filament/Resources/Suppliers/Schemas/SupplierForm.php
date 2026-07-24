@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Suppliers\Schemas;
 
+use App\Models\Supplier;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -16,6 +17,7 @@ class SupplierForm
                     ->label('Razón Social / Nombre')
                     ->required()
                     ->maxLength(255)
+                    ->unique(Supplier::class, 'name', ignoreRecord: true)
                     ->columnSpanFull(),
 
                 TextInput::make('contact_name')
@@ -33,6 +35,7 @@ class SupplierForm
                     ->label('Correo electrónico')
                     ->email()
                     ->maxLength(255)
+                    ->unique(ignoreRecord: true)
                     ->columnSpan(1),
 
                 TextInput::make('website')
