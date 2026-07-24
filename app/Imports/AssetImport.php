@@ -139,7 +139,7 @@ class AssetImport implements ToModel, WithHeadingRow, WithUpserts
 
         $employee = Employee::firstOrCreate(
             ['name' => $name],
-            ['status' => 'active', 'legajo' => null, 'department' => null, 'position' => null]
+            ['status' => 'active', 'legajo' => null, 'department_id' => null, 'position' => null]
         );
 
         $this->employees[$name] = $employee->id;

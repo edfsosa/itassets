@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Database\Seeder;
 
@@ -9,6 +10,8 @@ class EmployeeSeeder extends Seeder
 {
     public function run(): void
     {
+        $departments = Department::pluck('id', 'name');
+
         $employees = [
             [
                 'legajo'          => 'AMP-001',
@@ -16,7 +19,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '1.234.567',
                 'email'           => 'martin.gonzalez@itassets.test',
                 'phone'           => '+54-11-5555-1001',
-                'department'      => 'Tecnología',
+                'department_id'   => $departments['Tecnología'],
                 'position'        => 'Director de TI',
                 'status'          => 'active',
             ],
@@ -26,7 +29,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '2.345.678',
                 'email'           => 'sofia.martinez@itassets.test',
                 'phone'           => '+54-11-5555-1002',
-                'department'      => 'Tecnología',
+                'department_id'   => $departments['Tecnología'],
                 'position'        => 'Administradora de Sistemas',
                 'status'          => 'active',
             ],
@@ -36,7 +39,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '3.456.789',
                 'email'           => 'diego.rodriguez@itassets.test',
                 'phone'           => '+54-11-5555-1003',
-                'department'      => 'Tecnología',
+                'department_id'   => $departments['Tecnología'],
                 'position'        => 'Soporte Técnico',
                 'status'          => 'active',
             ],
@@ -46,7 +49,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '4.567.890',
                 'email'           => 'valentina.alvarez@itassets.test',
                 'phone'           => '+54-11-5555-1004',
-                'department'      => 'Recursos Humanos',
+                'department_id'   => $departments['Recursos Humanos'],
                 'position'        => 'Directora de RRHH',
                 'status'          => 'active',
             ],
@@ -56,7 +59,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '5.678.901',
                 'email'           => 'joaquin.perez@itassets.test',
                 'phone'           => '+54-11-5555-1005',
-                'department'      => 'Recursos Humanos',
+                'department_id'   => $departments['Recursos Humanos'],
                 'position'        => 'Analista de RRHH',
                 'status'          => 'active',
             ],
@@ -66,7 +69,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '6.789.012',
                 'email'           => 'camila.vargas@itassets.test',
                 'phone'           => '+54-11-5555-1006',
-                'department'      => 'Ventas',
+                'department_id'   => $departments['Ventas'],
                 'position'        => 'Gerente de Ventas',
                 'status'          => 'active',
             ],
@@ -76,7 +79,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '7.890.123',
                 'email'           => 'andres.silva@itassets.test',
                 'phone'           => '+54-11-5555-1007',
-                'department'      => 'Ventas',
+                'department_id'   => $departments['Ventas'],
                 'position'        => 'Ejecutivo de Ventas',
                 'status'          => 'active',
             ],
@@ -86,7 +89,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '8.901.234',
                 'email'           => 'isabella.rojas@itassets.test',
                 'phone'           => '+54-11-5555-1008',
-                'department'      => 'Contabilidad',
+                'department_id'   => $departments['Contabilidad'],
                 'position'        => 'Contadora Senior',
                 'status'          => 'active',
             ],
@@ -96,7 +99,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '9.012.345',
                 'email'           => 'santiago.castro@itassets.test',
                 'phone'           => '+54-11-5555-1009',
-                'department'      => 'Contabilidad',
+                'department_id'   => $departments['Contabilidad'],
                 'position'        => 'Asistente Contable',
                 'status'          => 'active',
             ],
@@ -106,7 +109,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '1.012.345',
                 'email'           => 'luciana.fernandez@itassets.test',
                 'phone'           => '+54-11-5555-1010',
-                'department'      => 'Marketing',
+                'department_id'   => $departments['Marketing'],
                 'position'        => 'Coordinadora de Marketing',
                 'status'          => 'active',
             ],
@@ -116,7 +119,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '1.123.456',
                 'email'           => 'matias.lopez@itassets.test',
                 'phone'           => '+54-11-5555-1011',
-                'department'      => 'Marketing',
+                'department_id'   => $departments['Marketing'],
                 'position'        => 'Diseñador Gráfico',
                 'status'          => 'active',
             ],
@@ -126,7 +129,7 @@ class EmployeeSeeder extends Seeder
                 'document_number' => '1.456.789',
                 'email'           => 'emilia.diaz@itassets.test',
                 'phone'           => '+54-11-5555-1012',
-                'department'      => 'Operaciones',
+                'department_id'   => $departments['Operaciones'],
                 'position'        => 'Jefa de Operaciones',
                 'status'          => 'active',
             ],

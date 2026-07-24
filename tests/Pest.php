@@ -49,7 +49,7 @@ function createRolesAndPermissions(): void
     app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
     $resources = ['asset', 'assignment', 'employee', 'license',
-        'maintenance_record', 'asset_category', 'supplier', 'location', 'user',
+        'maintenance_record', 'asset_category', 'supplier', 'location', 'user', 'department',
     ];
     $actions = ['view_any', 'view', 'create', 'update', 'delete'];
     $extraPermissions = ['import_asset', 'export_report'];

@@ -32,7 +32,7 @@ class EmployeeInfolist
                             ->formatStateUsing(fn (Employee $record): string => $record->getStatusLabel())
                             ->color(fn (Employee $record): string => $record->getStatusBadgeColor()),
 
-                        TextEntry::make('department')
+                        TextEntry::make('department.name')
                             ->label('Departamento')
                             ->placeholder('—'),
 
