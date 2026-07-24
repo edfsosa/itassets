@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -37,6 +38,17 @@ class UserInfolist
                 Section::make('Información del sistema')
                     ->icon('heroicon-o-information-circle')
                     ->schema([
+                        IconEntry::make('is_active')
+                            ->label('Activo')
+                            ->boolean()
+                            ->columnSpan(1),
+
+                        TextEntry::make('last_login_at')
+                            ->label('Último acceso')
+                            ->dateTime('d/m/Y H:i')
+                            ->placeholder('Nunca')
+                            ->columnSpan(1),
+
                         TextEntry::make('created_at')
                             ->label('Creado el')
                             ->dateTime('d/m/Y H:i')
