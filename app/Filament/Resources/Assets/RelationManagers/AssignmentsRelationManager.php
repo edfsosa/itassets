@@ -105,7 +105,7 @@ class AssignmentsRelationManager extends RelationManager
                 TextColumn::make('assigned_at')
                     ->label('Asignado el')
                     ->date('d/m/Y')
-                    ->sortable(),
+                    ->sortable(query: fn (Builder $query, string $direction) => $query->orderBy('assignments.assigned_at', $direction)),
 
                 TextColumn::make('returned_at')
                     ->label('Devuelto el')
@@ -154,6 +154,6 @@ class AssignmentsRelationManager extends RelationManager
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('assigned_at', 'desc');
+            ->defaultSort('assignments.assigned_at', 'desc');
     }
 }
