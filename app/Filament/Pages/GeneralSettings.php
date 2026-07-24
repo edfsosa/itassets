@@ -22,9 +22,9 @@ class GeneralSettings extends Page implements HasForms
 
     protected static ?string $navigationLabel = 'Configuración general';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Configuración';
+    protected static \UnitEnum|string|null $navigationGroup = 'Sistema';
 
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 1;
 
     protected string $view = 'filament.pages.general-settings';
 

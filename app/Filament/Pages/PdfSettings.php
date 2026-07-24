@@ -21,9 +21,9 @@ class PdfSettings extends Page implements HasForms
 
     protected static ?string $navigationLabel = 'PDF Asignación';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Configuración';
+    protected static \UnitEnum|string|null $navigationGroup = 'Sistema';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 2;
 
     protected string $view = 'filament.pages.pdf-settings';
 

@@ -21,7 +21,7 @@ class Reports extends Page
 
     protected static \UnitEnum|string|null $navigationGroup = 'Inventario';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 5;
 
     protected string $view = 'filament.pages.reports';
 

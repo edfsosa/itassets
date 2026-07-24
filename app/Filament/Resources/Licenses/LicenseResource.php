@@ -39,9 +39,9 @@ class LicenseResource extends Resource
 
     protected static ?string $navigationLabel = 'Licencias';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Licencias';
+    protected static \UnitEnum|string|null $navigationGroup = 'Inventario';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
     {

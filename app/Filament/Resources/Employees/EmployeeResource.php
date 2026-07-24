@@ -40,9 +40,9 @@ class EmployeeResource extends Resource
 
     protected static ?string $navigationLabel = 'Empleados';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Personal';
+    protected static \UnitEnum|string|null $navigationGroup = 'Catálogos';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
     {
