@@ -11,6 +11,7 @@ use App\Filament\Resources\Licenses\Pages\ViewLicense;
 use App\Filament\Resources\Licenses\RelationManagers\AssignmentsRelationManager as LicenseAssignmentsAssignmentsRelationManager;
 use App\Models\Asset;
 use App\Models\Assignment;
+use App\Models\Department;
 use App\Models\Employee;
 use App\Models\License;
 use App\Models\LicenseAssignment;
@@ -27,11 +28,16 @@ it('lists employees', function () {
 });
 
 it('creates an employee', function () {
+    $department = Department::factory()->create();
+
     Livewire::test(CreateEmployee::class)
         ->fillForm([
             'name' => 'Jane Doe',
             'legajo' => 'AMP-999',
             'document_number' => '99999999',
+            'department_id' => $department->id,
+            'position' => 'Analista',
+            'email' => 'jane.doe@example.com',
         ])
         ->call('create')
         ->assertHasNoFormErrors();
@@ -74,6 +80,42 @@ it('rejects a duplicate legajo', function () {
         ->assertHasFormErrors(['legajo' => 'unique']);
 });
 
+it('requires a department to create', function () {
+    Livewire::test(CreateEmployee::class)
+        ->fillForm([
+            'name' => 'Jane Doe',
+            'legajo' => 'AMP-999',
+            'document_number' => '99999999',
+            'department_id' => null,
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['department_id' => 'required']);
+});
+
+it('requires a position to create', function () {
+    Livewire::test(CreateEmployee::class)
+        ->fillForm([
+            'name' => 'Jane Doe',
+            'legajo' => 'AMP-999',
+            'document_number' => '99999999',
+            'position' => '',
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['position' => 'required']);
+});
+
+it('requires an email to create', function () {
+    Livewire::test(CreateEmployee::class)
+        ->fillForm([
+            'name' => 'Jane Doe',
+            'legajo' => 'AMP-999',
+            'document_number' => '99999999',
+            'email' => '',
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['email' => 'required']);
+});
+
 it('hides the is_active field on create but shows it on edit, defaulting new employees to active', function () {
     Livewire::test(CreateEmployee::class)
         ->assertFormFieldIsHidden('is_active');
@@ -83,11 +125,16 @@ it('hides the is_active field on create but shows it on edit, defaulting new emp
     Livewire::test(EditEmployee::class, ['record' => $employee->getRouteKey()])
         ->assertFormFieldIsVisible('is_active');
 
+    $department = Department::factory()->create();
+
     Livewire::test(CreateEmployee::class)
         ->fillForm([
             'name' => 'New Hire',
             'legajo' => 'AMP-998',
             'document_number' => '99999998',
+            'department_id' => $department->id,
+            'position' => 'Analista',
+            'email' => 'new.hire@example.com',
         ])
         ->call('create')
         ->assertHasNoFormErrors();

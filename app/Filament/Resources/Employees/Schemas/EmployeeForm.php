@@ -56,12 +56,14 @@ class EmployeeForm
                         Select::make('department_id')
                             ->label('Departamento')
                             ->relationship('department', 'name')
+                            ->required()
                             ->searchable()
                             ->preload()
                             ->columnSpan(1),
 
                         TextInput::make('position')
                             ->label('Cargo')
+                            ->required()
                             ->maxLength(100)
                             ->placeholder('Ej: Desarrollador Backend')
                             ->columnSpan(1),
@@ -74,6 +76,7 @@ class EmployeeForm
                         TextInput::make('email')
                             ->label('Correo electrónico')
                             ->email()
+                            ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
                             ->placeholder('nombre@empresa.com')
