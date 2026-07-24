@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Employees\Schemas;
 use App\Models\Employee;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class EmployeeForm
@@ -13,56 +14,80 @@ class EmployeeForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->label('Nombre completo')
-                    ->required()
-                    ->maxLength(255)
-                    ->columnSpan(2),
+                Section::make('Información personal')
+                    ->icon('heroicon-o-user')
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nombre completo')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Ej: Juan Pérez')
+                            ->columnSpanFull(),
 
-                TextInput::make('legajo')
-                    ->label('Legajo')
-                    ->maxLength(50)
-                    ->unique(ignoreRecord: true)
-                    ->columnSpan(1),
+                        TextInput::make('legajo')
+                            ->label('Legajo')
+                            ->required()
+                            ->maxLength(50)
+                            ->unique(ignoreRecord: true)
+                            ->placeholder('Ej: AMP-001')
+                            ->helperText('Identificador interno único del empleado.')
+                            ->columnSpan(1),
 
-                TextInput::make('document_number')
-                    ->label('Documento de identidad')
-                    ->maxLength(50)
-                    ->unique(ignoreRecord: true)
-                    ->columnSpan(1),
+                        TextInput::make('document_number')
+                            ->label('Documento de identidad')
+                            ->required()
+                            ->maxLength(50)
+                            ->unique(ignoreRecord: true)
+                            ->placeholder('Ej: 12.345.678')
+                            ->helperText('DNI, pasaporte u otro documento de identidad.')
+                            ->columnSpan(1),
+                    ])
+                    ->columns(2),
 
-                Select::make('status')
-                    ->label('Estado')
-                    ->required()
-                    ->options(Employee::STATUSES)
-                    ->default('active')
-                    ->columnSpan(1),
+                Section::make('Datos laborales')
+                    ->icon('heroicon-o-briefcase')
+                    ->schema([
+                        Select::make('status')
+                            ->label('Estado')
+                            ->required()
+                            ->options(Employee::STATUSES)
+                            ->default('active')
+                            ->columnSpan(1),
 
-                Select::make('department_id')
-                    ->label('Departamento')
-                    ->relationship('department', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->columnSpan(1),
+                        Select::make('department_id')
+                            ->label('Departamento')
+                            ->relationship('department', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->columnSpan(1),
 
-                TextInput::make('position')
-                    ->label('Cargo')
-                    ->maxLength(100)
-                    ->columnSpan(1),
+                        TextInput::make('position')
+                            ->label('Cargo')
+                            ->maxLength(100)
+                            ->placeholder('Ej: Desarrollador Backend')
+                            ->columnSpan(1),
+                    ])
+                    ->columns(2),
 
-                TextInput::make('email')
-                    ->label('Correo electrónico')
-                    ->email()
-                    ->maxLength(255)
-                    ->unique(ignoreRecord: true)
-                    ->columnSpan(1),
+                Section::make('Contacto')
+                    ->icon('heroicon-o-phone')
+                    ->schema([
+                        TextInput::make('email')
+                            ->label('Correo electrónico')
+                            ->email()
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true)
+                            ->placeholder('nombre@empresa.com')
+                            ->columnSpan(1),
 
-                TextInput::make('phone')
-                    ->label('Teléfono')
-                    ->tel()
-                    ->maxLength(30)
-                    ->columnSpan(1),
-            ])
-            ->columns(2);
+                        TextInput::make('phone')
+                            ->label('Teléfono')
+                            ->tel()
+                            ->maxLength(30)
+                            ->placeholder('+54 11 5555-1234')
+                            ->columnSpan(1),
+                    ])
+                    ->columns(2),
+            ]);
     }
 }

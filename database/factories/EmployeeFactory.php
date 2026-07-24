@@ -19,7 +19,7 @@ class EmployeeFactory extends Factory
             'phone' => $this->faker->optional()->numerify('###-###-####'),
             'department_id' => Department::factory(),
             'position' => $this->faker->jobTitle(),
-            'document_number' => $this->faker->unique()->optional()->numerify('########'),
+            'document_number' => $this->faker->unique()->numerify('########'),
             'status' => 'active',
         ];
     }

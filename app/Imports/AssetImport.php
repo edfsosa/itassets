@@ -7,6 +7,7 @@ use App\Models\AssetCategory;
 use App\Models\Employee;
 use App\Models\Location;
 use App\Models\Supplier;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
@@ -139,7 +140,13 @@ class AssetImport implements ToModel, WithHeadingRow, WithUpserts
 
         $employee = Employee::firstOrCreate(
             ['name' => $name],
-            ['status' => 'active', 'legajo' => null, 'department_id' => null, 'position' => null]
+            [
+                'status' => 'active',
+                'legajo' => 'IMPORT-' . strtoupper(Str::random(6)),
+                'document_number' => 'IMPORT-' . strtoupper(Str::random(6)),
+                'department_id' => null,
+                'position' => null,
+            ]
         );
 
         $this->employees[$name] = $employee->id;

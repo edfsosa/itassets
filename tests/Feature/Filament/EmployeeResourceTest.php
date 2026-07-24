@@ -30,12 +30,52 @@ it('creates an employee', function () {
     Livewire::test(CreateEmployee::class)
         ->fillForm([
             'name' => 'Jane Doe',
+            'legajo' => 'AMP-999',
+            'document_number' => '99999999',
             'status' => 'active',
         ])
         ->call('create')
         ->assertHasNoFormErrors();
 
     expect(Employee::where('name', 'Jane Doe')->exists())->toBeTrue();
+});
+
+it('requires a legajo to create', function () {
+    Livewire::test(CreateEmployee::class)
+        ->fillForm([
+            'name' => 'Jane Doe',
+            'legajo' => '',
+            'document_number' => '99999999',
+            'status' => 'active',
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['legajo' => 'required']);
+});
+
+it('requires a document_number to create', function () {
+    Livewire::test(CreateEmployee::class)
+        ->fillForm([
+            'name' => 'Jane Doe',
+            'legajo' => 'AMP-999',
+            'document_number' => '',
+            'status' => 'active',
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['document_number' => 'required']);
+});
+
+it('rejects a duplicate legajo', function () {
+    Employee::factory()->create(['legajo' => 'AMP-100']);
+
+    Livewire::test(CreateEmployee::class)
+        ->fillForm([
+            'name' => 'Other Person',
+            'legajo' => 'AMP-100',
+            'document_number' => '99999999',
+            'status' => 'active',
+        ])
+        ->call('create')
+        ->assertHasFormErrors(['legajo' => 'unique']);
 });
 
 it('returns 404 for a non-existent employee', function () {
