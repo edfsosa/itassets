@@ -10,13 +10,13 @@ it('has active scope', function () {
     Employee::factory()->count(3)->create();
     Employee::factory()->inactive()->count(2)->create();
 
-    expect(Employee::where('status', 'active')->count())->toBe(3);
+    expect(Employee::where('is_active', true)->count())->toBe(3);
 });
 
-it('has correct status label', function () {
-    $employee = Employee::factory()->create(['status' => 'active']);
+it('casts is_active to boolean and defaults to true', function () {
+    $employee = Employee::factory()->create();
 
-    expect($employee->getStatusLabel())->toBe('Activo');
+    expect($employee->is_active)->toBeTrue();
 });
 
 it('has assignments relationship', function () {
@@ -31,6 +31,3 @@ it('has activeAssignments scope', function () {
     expect($employee->activeAssignments())->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\HasMany::class);
 });
 
-it('has status constants defined', function () {
-    expect(Employee::STATUSES)->toHaveKeys(['active', 'inactive']);
-});

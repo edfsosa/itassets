@@ -2,13 +2,14 @@
 
 namespace App\Filament\Resources\Employees\Tables;
 
-use App\Models\Employee;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class EmployeesTable
@@ -56,11 +57,9 @@ class EmployeesTable
                     ->placeholder('—')
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('status')
-                    ->label('Estado')
-                    ->badge()
-                    ->formatStateUsing(fn (Employee $record): string => $record->getStatusLabel())
-                    ->color(fn (Employee $record): string => $record->getStatusBadgeColor())
+                IconColumn::make('is_active')
+                    ->label('Activo')
+                    ->boolean()
                     ->sortable(),
 
                 TextColumn::make('created_at')
@@ -70,9 +69,8 @@ class EmployeesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->label('Estado')
-                    ->options(Employee::STATUSES),
+                TernaryFilter::make('is_active')
+                    ->label('Activo'),
 
                 SelectFilter::make('department_id')
                     ->label('Departamento')

@@ -8,4 +8,11 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateEmployee extends CreateRecord
 {
     protected static string $resource = EmployeeResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['is_active'] = true;
+
+        return $data;
+    }
 }

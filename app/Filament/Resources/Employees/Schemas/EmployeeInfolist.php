@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Employees\Schemas;
 
-use App\Models\Employee;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -26,11 +26,9 @@ class EmployeeInfolist
                         TextEntry::make('document_number')
                             ->label('Documento de identidad'),
 
-                        TextEntry::make('status')
-                            ->label('Estado')
-                            ->badge()
-                            ->formatStateUsing(fn (Employee $record): string => $record->getStatusLabel())
-                            ->color(fn (Employee $record): string => $record->getStatusBadgeColor()),
+                        IconEntry::make('is_active')
+                            ->label('Activo')
+                            ->boolean(),
 
                         TextEntry::make('department.name')
                             ->label('Departamento')

@@ -21,7 +21,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1001',
                 'department_id'   => $departments['Tecnología'],
                 'position'        => 'Director de TI',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-002',
@@ -31,7 +31,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1002',
                 'department_id'   => $departments['Tecnología'],
                 'position'        => 'Administradora de Sistemas',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-003',
@@ -41,7 +41,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1003',
                 'department_id'   => $departments['Tecnología'],
                 'position'        => 'Soporte Técnico',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-004',
@@ -51,7 +51,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1004',
                 'department_id'   => $departments['Recursos Humanos'],
                 'position'        => 'Directora de RRHH',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-005',
@@ -61,7 +61,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1005',
                 'department_id'   => $departments['Recursos Humanos'],
                 'position'        => 'Analista de RRHH',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-006',
@@ -71,7 +71,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1006',
                 'department_id'   => $departments['Ventas'],
                 'position'        => 'Gerente de Ventas',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-007',
@@ -81,7 +81,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1007',
                 'department_id'   => $departments['Ventas'],
                 'position'        => 'Ejecutivo de Ventas',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-008',
@@ -91,7 +91,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1008',
                 'department_id'   => $departments['Contabilidad'],
                 'position'        => 'Contadora Senior',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-009',
@@ -101,7 +101,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1009',
                 'department_id'   => $departments['Contabilidad'],
                 'position'        => 'Asistente Contable',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-010',
@@ -111,7 +111,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1010',
                 'department_id'   => $departments['Marketing'],
                 'position'        => 'Coordinadora de Marketing',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-011',
@@ -121,7 +121,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1011',
                 'department_id'   => $departments['Marketing'],
                 'position'        => 'Diseñador Gráfico',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
             [
                 'legajo'          => 'AMP-012',
@@ -131,7 +131,7 @@ class EmployeeSeeder extends Seeder
                 'phone'           => '+54-11-5555-1012',
                 'department_id'   => $departments['Operaciones'],
                 'position'        => 'Jefa de Operaciones',
-                'status'          => 'active',
+                'is_active'       => true,
             ],
         ];
 

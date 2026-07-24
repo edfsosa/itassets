@@ -20,12 +20,12 @@ class EmployeeFactory extends Factory
             'department_id' => Department::factory(),
             'position' => $this->faker->jobTitle(),
             'document_number' => $this->faker->unique()->numerify('########'),
-            'status' => 'active',
+            'is_active' => true,
         ];
     }
 
     public function inactive(): static
     {
-        return $this->state(['status' => 'inactive']);
+        return $this->state(['is_active' => false]);
     }
 }

@@ -22,29 +22,16 @@ class Employee extends Model
         'department_id',
         'position',
         'document_number',
-        'status',
+        'is_active',
         'created_by',
         'updated_by',
     ];
 
-    public const STATUSES = [
-        'active'   => 'Activo',
-        'inactive' => 'Inactivo',
-    ];
-
-    public const STATUS_COLORS = [
-        'active'   => 'success',
-        'inactive' => 'danger',
-    ];
-
-    public function getStatusLabel(): string
+    protected function casts(): array
     {
-        return self::STATUSES[$this->status] ?? $this->status;
-    }
-
-    public function getStatusBadgeColor(): string
-    {
-        return self::STATUS_COLORS[$this->status] ?? 'gray';
+        return [
+            'is_active' => 'boolean',
+        ];
     }
 
     public function department(): BelongsTo
