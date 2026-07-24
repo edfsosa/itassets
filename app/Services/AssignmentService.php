@@ -57,7 +57,7 @@ class AssignmentService
 
     public function getActiveEmployees(): array
     {
-        return Employee::where('status', 'active')
+        return Employee::where('is_active', true)
             ->orderBy('name')
             ->pluck('name', 'id')
             ->toArray();

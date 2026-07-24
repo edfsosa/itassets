@@ -53,7 +53,7 @@ class AssignmentsRelationManager extends RelationManager
                     ->options(function (?LicenseAssignment $record): array {
                         return Employee::query()
                             ->where(function ($query) use ($record) {
-                                $query->where('status', 'active');
+                                $query->where('is_active', true);
 
                                 if ($record?->employee_id) {
                                     $query->orWhere('id', $record->employee_id);

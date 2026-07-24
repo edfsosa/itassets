@@ -24,7 +24,7 @@ class AssignmentForm
                     ->options(function (?Assignment $record): array {
                         return Employee::query()
                             ->where(function ($query) use ($record) {
-                                $query->where('status', 'active');
+                                $query->where('is_active', true);
 
                                 if ($record) {
                                     $query->orWhere('id', $record->employee_id);

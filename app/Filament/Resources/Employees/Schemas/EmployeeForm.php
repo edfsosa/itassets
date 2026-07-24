@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Employees\Schemas;
 
-use App\Models\Employee;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -47,11 +47,10 @@ class EmployeeForm
                 Section::make('Datos laborales')
                     ->icon('heroicon-o-briefcase')
                     ->schema([
-                        Select::make('status')
-                            ->label('Estado')
-                            ->required()
-                            ->options(Employee::STATUSES)
-                            ->default('active')
+                        Toggle::make('is_active')
+                            ->label('Activo')
+                            ->default(true)
+                            ->hiddenOn('create')
                             ->columnSpan(1),
 
                         Select::make('department_id')

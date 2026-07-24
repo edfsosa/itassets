@@ -32,7 +32,6 @@ it('creates an employee', function () {
             'name' => 'Jane Doe',
             'legajo' => 'AMP-999',
             'document_number' => '99999999',
-            'status' => 'active',
         ])
         ->call('create')
         ->assertHasNoFormErrors();
@@ -46,7 +45,6 @@ it('requires a legajo to create', function () {
             'name' => 'Jane Doe',
             'legajo' => '',
             'document_number' => '99999999',
-            'status' => 'active',
         ])
         ->call('create')
         ->assertHasFormErrors(['legajo' => 'required']);
@@ -58,7 +56,6 @@ it('requires a document_number to create', function () {
             'name' => 'Jane Doe',
             'legajo' => 'AMP-999',
             'document_number' => '',
-            'status' => 'active',
         ])
         ->call('create')
         ->assertHasFormErrors(['document_number' => 'required']);
@@ -72,10 +69,30 @@ it('rejects a duplicate legajo', function () {
             'name' => 'Other Person',
             'legajo' => 'AMP-100',
             'document_number' => '99999999',
-            'status' => 'active',
         ])
         ->call('create')
         ->assertHasFormErrors(['legajo' => 'unique']);
+});
+
+it('hides the is_active field on create but shows it on edit, defaulting new employees to active', function () {
+    Livewire::test(CreateEmployee::class)
+        ->assertFormFieldIsHidden('is_active');
+
+    $employee = Employee::factory()->create();
+
+    Livewire::test(EditEmployee::class, ['record' => $employee->getRouteKey()])
+        ->assertFormFieldIsVisible('is_active');
+
+    Livewire::test(CreateEmployee::class)
+        ->fillForm([
+            'name' => 'New Hire',
+            'legajo' => 'AMP-998',
+            'document_number' => '99999998',
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    expect(Employee::where('name', 'New Hire')->first()->is_active)->toBeTrue();
 });
 
 it('returns 404 for a non-existent employee', function () {
@@ -147,7 +164,7 @@ it('still allows editing an assignment after its employee becomes inactive', fun
     $assignment = Assignment::factory()->create(['employee_id' => $employee->id]);
     $asset = Asset::factory()->available()->create();
     $assignment->assets()->attach($asset->id, ['assigned_at' => $assignment->assigned_at]);
-    $employee->update(['status' => 'inactive']);
+    $employee->update(['is_active' => false]);
 
     Livewire::test(\App\Filament\Resources\Assignments\Pages\EditAssignment::class, ['record' => $assignment->getRouteKey()])
         ->fillForm(['notes' => 'Updated notes'])
@@ -162,7 +179,7 @@ it('still allows editing an assignment via the Assets relation manager after its
     $employee = Employee::factory()->create();
     $assignment = Assignment::factory()->create(['employee_id' => $employee->id]);
     $assignment->assets()->attach($asset->id, ['assigned_at' => $assignment->assigned_at]);
-    $employee->update(['status' => 'inactive']);
+    $employee->update(['is_active' => false]);
 
     Livewire::test(AssetAssignmentsRelationManager::class, [
         'ownerRecord' => $asset,
@@ -181,7 +198,7 @@ it('still allows editing a license assignment after its employee becomes inactiv
         'license_id' => $license->id,
         'employee_id' => $employee->id,
     ]);
-    $employee->update(['status' => 'inactive']);
+    $employee->update(['is_active' => false]);
 
     Livewire::test(LicenseAssignmentsAssignmentsRelationManager::class, [
         'ownerRecord' => $license,
