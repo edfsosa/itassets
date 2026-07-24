@@ -27,6 +27,7 @@ class LocationsTable
 
                 TextColumn::make('floor')
                     ->label('Piso')
+                    ->searchable()
                     ->placeholder('—'),
 
                 TextColumn::make('room')

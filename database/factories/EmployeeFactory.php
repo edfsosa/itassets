@@ -15,7 +15,7 @@ class EmployeeFactory extends Factory
             'legajo' => $this->faker->unique()->numerify('EMP-####'),
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->companyEmail(),
-            'phone' => $this->faker->optional()->phoneNumber(),
+            'phone' => $this->faker->optional()->numerify('###-###-####'),
             'department' => $this->faker->randomElement(['TI', 'RRHH', 'Ventas', 'Contabilidad', 'Marketing', 'Operaciones']),
             'position' => $this->faker->jobTitle(),
             'document_number' => $this->faker->unique()->optional()->numerify('########'),

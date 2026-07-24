@@ -3,6 +3,9 @@
 use App\Filament\Resources\Locations\Pages\CreateLocation;
 use App\Filament\Resources\Locations\Pages\EditLocation;
 use App\Filament\Resources\Locations\Pages\ListLocations;
+use App\Filament\Resources\Locations\Pages\ViewLocation;
+use App\Filament\Resources\Locations\RelationManagers\AssetsRelationManager;
+use App\Models\Asset;
 use App\Models\Location;
 use Livewire\Livewire;
 
@@ -34,6 +37,24 @@ it('requires a name to create', function () {
         ->fillForm(['name' => ''])
         ->call('create')
         ->assertHasFormErrors(['name' => 'required']);
+});
+
+it('rejects a duplicate name', function () {
+    Location::factory()->create(['name' => 'Sede Central']);
+
+    Livewire::test(CreateLocation::class)
+        ->fillForm(['name' => 'Sede Central'])
+        ->call('create')
+        ->assertHasFormErrors(['name' => 'unique']);
+});
+
+it('allows keeping its own name when editing', function () {
+    $location = Location::factory()->create(['name' => 'Sede Central']);
+
+    Livewire::test(EditLocation::class, ['record' => $location->getRouteKey()])
+        ->fillForm(['name' => 'Sede Central'])
+        ->call('save')
+        ->assertHasNoFormErrors();
 });
 
 it('edits a location', function () {
@@ -77,4 +98,47 @@ it('hides the delete bulk action from editor on the list page', function () {
     loginAsEditor();
 
     Livewire::test(ListLocations::class)->assertTableBulkActionHidden('delete');
+});
+
+it('allows deleting a location with no assets attached', function () {
+    $location = Location::factory()->create();
+
+    Livewire::test(EditLocation::class, ['record' => $location->getRouteKey()])
+        ->callAction('delete');
+
+    expect(Location::find($location->id))->toBeNull();
+});
+
+it('allows deleting a location with associated assets, nulling the FK', function () {
+    $location = Location::factory()->create();
+    $asset = Asset::factory()->create(['location_id' => $location->id]);
+
+    Livewire::test(EditLocation::class, ['record' => $location->getRouteKey()])
+        ->callAction('delete');
+
+    expect(Location::find($location->id))->toBeNull()
+        ->and($asset->fresh()->location_id)->toBeNull();
+});
+
+it('shows the assets belonging to the location in the Activos tab', function () {
+    $location = Location::factory()->create();
+    $asset = Asset::factory()->create(['location_id' => $location->id]);
+    Asset::factory()->create();
+
+    Livewire::test(AssetsRelationManager::class, [
+        'ownerRecord' => $location,
+        'pageClass' => ViewLocation::class,
+    ])->assertCanSeeTableRecords([$asset]);
+});
+
+it('has no create/edit/delete actions on the Activos tab (read-only)', function () {
+    $location = Location::factory()->create();
+
+    Livewire::test(AssetsRelationManager::class, [
+        'ownerRecord' => $location,
+        'pageClass' => ViewLocation::class,
+    ])
+        ->assertTableActionDoesNotExist('create')
+        ->assertTableActionDoesNotExist('edit')
+        ->assertTableActionDoesNotExist('delete');
 });
