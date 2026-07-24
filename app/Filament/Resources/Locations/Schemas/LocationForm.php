@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Locations\Schemas;
 
+use App\Models\Location;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -16,6 +17,7 @@ class LocationForm
                     ->label('Nombre')
                     ->required()
                     ->maxLength(255)
+                    ->unique(Location::class, 'name', ignoreRecord: true)
                     ->columnSpanFull(),
 
                 TextInput::make('building')
