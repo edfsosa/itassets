@@ -41,9 +41,9 @@ class SupplierResource extends Resource
 
     protected static ?string $navigationLabel = 'Proveedores';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Configuración';
+    protected static \UnitEnum|string|null $navigationGroup = 'Catálogos';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {

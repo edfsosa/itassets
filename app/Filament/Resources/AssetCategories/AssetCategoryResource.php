@@ -39,7 +39,7 @@ class AssetCategoryResource extends Resource
 
     protected static ?string $navigationLabel = 'Categorías de Activos';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Configuración';
+    protected static \UnitEnum|string|null $navigationGroup = 'Catálogos';
 
     protected static ?int $navigationSort = 1;
 

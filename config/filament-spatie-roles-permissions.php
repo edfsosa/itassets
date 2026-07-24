@@ -11,7 +11,7 @@ return [
 
     'preload_permissions' => true,
 
-    'navigation_section_group' => 'Configuración',
+    'navigation_section_group' => 'Administración',
 
     'team_model' => \App\Models\Team::class,
 
@@ -90,8 +90,8 @@ return [
     ],
 
     'sort' => [
-        'role_navigation' => 5,
-        'permission_navigation' => 6,
+        'role_navigation' => 2,
+        'permission_navigation' => 3,
     ],
 
     'generator' => [
