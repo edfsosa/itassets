@@ -8,6 +8,9 @@ use App\Filament\Resources\Suppliers\Pages\CreateSupplier;
 use App\Filament\Resources\Suppliers\Pages\EditSupplier;
 use App\Filament\Resources\Suppliers\Pages\ListSuppliers;
 use App\Filament\Resources\Suppliers\Pages\ViewSupplier;
+use App\Filament\Resources\Suppliers\RelationManagers\AssetsRelationManager;
+use App\Filament\Resources\Suppliers\RelationManagers\LicensesRelationManager;
+use App\Filament\Resources\Suppliers\RelationManagers\MaintenanceRecordsRelationManager;
 use App\Filament\Resources\Suppliers\Schemas\SupplierForm;
 use App\Filament\Resources\Suppliers\Schemas\SupplierInfolist;
 use App\Filament\Resources\Suppliers\Tables\SuppliersTable;
@@ -60,6 +63,9 @@ class SupplierResource extends Resource
     public static function getRelations(): array
     {
         return [
+            AssetsRelationManager::class,
+            LicensesRelationManager::class,
+            MaintenanceRecordsRelationManager::class,
             ActivityRelationManager::class,
         ];
     }

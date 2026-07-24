@@ -43,6 +43,21 @@ class SuppliersTable
                     ->openUrlInNewTab()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                TextColumn::make('assets_count')
+                    ->label('Activos')
+                    ->counts('assets')
+                    ->sortable(),
+
+                TextColumn::make('licenses_count')
+                    ->label('Licencias')
+                    ->counts('licenses')
+                    ->sortable(),
+
+                TextColumn::make('maintenance_records_count')
+                    ->label('Mantenimientos')
+                    ->counts('maintenanceRecords')
+                    ->sortable(),
+
                 TextColumn::make('created_at')
                     ->label('Creado')
                     ->date('d/m/Y')
